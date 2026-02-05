@@ -1,5 +1,5 @@
 #tag WebPage
-Begin WebPage WebPage1
+Begin WebPage wp_Review
    AllowTabOrderWrap=   True
    Compatibility   =   ""
    ControlCount    =   0
@@ -32,7 +32,6 @@ Begin WebPage WebPage1
    _ImplicitInstance=   False
    _mDesignHeight  =   0
    _mDesignWidth   =   0
-   _mName          =   ""
    _mPanelIndex    =   -1
    Begin WebListBox lstIdentifiers
       AllowRowReordering=   False
@@ -597,7 +596,7 @@ Begin WebPage WebPage1
       Width           =   284
       _mPanelIndex    =   -1
    End
-   Begin WebCheckbox Checkbox2
+   Begin WebCheckbox chkNewGuidelines
       Caption         =   "Conforms with new guidelines"
       ControlID       =   ""
       CSSClasses      =   ""
@@ -681,7 +680,7 @@ Begin WebPage WebPage1
       Width           =   284
       _mPanelIndex    =   -1
    End
-   Begin WebButton Button1
+   Begin WebButton btnPREP
       AllowAutoDisable=   False
       Cancel          =   False
       Caption         =   "Prep copy"
@@ -723,11 +722,36 @@ End
 	#tag EndEvent
 
 
+	#tag Method, Flags = &h0
+		Sub ExportAllRecords()
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetAllRecords() As rowset
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetRecordByID() As rowset
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub UpdateRecord()
+		  
+		End Sub
+	#tag EndMethod
+
+
 #tag EndWindowCode
 
 #tag Events btnCopy
 #tag EndEvents
-#tag Events Button1
+#tag Events btnPREP
 	#tag Event
 		Sub Pressed()
 		  CopyStringToClipboardHelper.SetCopyText(btnCopy, "Text to kopiera")

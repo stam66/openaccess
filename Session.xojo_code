@@ -10,6 +10,13 @@ Inherits WebSession
   SendEventsInBatches=False
   LazyLoadDependencies=False
 #tag EndSession
+	#tag Method, Flags = &h0
+		Sub connect()
+		  
+		End Sub
+	#tag EndMethod
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Index"
