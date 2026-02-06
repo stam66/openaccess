@@ -1009,15 +1009,28 @@ End
 		  // Generate OTP
 		  var otp as string = GenerateOTP()
 		  
-		  // Store SHA2 hash of OTP as the password and set password_is_OTP = 1
-		  sql = "UPDATE users SET password_hash = SHA2(?, 256), password_is_OTP = 1 WHERE id = ?"
+		  // Hash the OTP first, then store it
+		  sql = "SELECT SHA2(?, 256) as otp_hash"
 		  ps = Session.DB.Prepare(sql)
 		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		  ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_LONG)
 		  ps.Bind(0, otp)
-		  ps.Bind(1, userID)
-		  ps.ExecuteSQL
-		  
+		  var rsHash as RowSet = ps.SelectSQL
+		  var otpHash as string = rsHash.Column("otp_hash").StringValue
+
+		  // Update password_hash and set password_is_OTP = 1
+		  Try
+		    sql = "UPDATE users SET password_hash = ?, password_is_OTP = 1 WHERE id = ?"
+		    ps = Session.DB.Prepare(sql)
+		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		    ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_LONG)
+		    ps.Bind(0, otpHash)
+		    ps.Bind(1, userID)
+		    ps.ExecuteSQL
+		  Catch err as DatabaseException
+		    MessageBox("DB update error: " + err.Message)
+		    Return
+		  End Try
+
 		  // Send OTP email via MailJet
 		  SendOTPEmail(userEmail, userName, otp)
 		  
