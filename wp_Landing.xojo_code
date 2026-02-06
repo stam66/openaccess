@@ -285,7 +285,7 @@ Begin WebPage wp_Landing
          Width           =   264
          _mPanelIndex    =   -1
       End
-      Begin WebButton Button1
+      Begin WebButton btnReset
          AllowAutoDisable=   False
          Cancel          =   False
          Caption         =   "Reset"
@@ -1023,7 +1023,7 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events Button1
+#tag Events btnReset
 	#tag Event
 		Sub Pressed()
 		  showRect(LoginSection.Reset)
