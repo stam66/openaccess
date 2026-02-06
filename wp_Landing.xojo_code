@@ -1112,12 +1112,15 @@ End
 
 		  var payload as string = msg.ToString
 
+		  // Base64 encode credentials for Basic Auth
+		  // Strip all CR/LF that Xojo's EncodeBase64 inserts (MIME wrapping at 76 chars + trailing)
+		  var rawB64 as string = EncodeBase64(apiKey + ":" + secretKey)
+		  var credentials as string = rawB64.ReplaceAll(Chr(13), "").ReplaceAll(Chr(10), "")
+
 		  Try
 		    var conn as new URLConnection
 		    conn.RequestHeader("Content-Type") = "application/json"
-		    // Use URLConnection's built-in Basic Auth instead of manual header
-		    conn.UserName = apiKey
-		    conn.Password = secretKey
+		    conn.RequestHeader("Authorization") = "Basic " + credentials
 		    conn.SetRequestContent(payload, "application/json")
 
 		    var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
