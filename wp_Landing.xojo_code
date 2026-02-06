@@ -909,38 +909,205 @@ End
 
 	#tag Method, Flags = &h0
 		Sub DoLogin()
-		  var loginError as Integer = 0
 		  if txtUsername.Text.IsEmpty or txtPassword.Text.IsEmpty then
-		    MessageBox ("Both username and password need to be entered.")
+		    MessageBox("Both username and password need to be entered.")
 		    Return
 		  end if
-		  
-		  var password_hash As string
-		  var sql as string = "SELECT * FROM users WHERE username = ?"
+
+		  // Look up the user
+		  var sql as string = "SELECT id, username, password_hash, password_is_OTP FROM users WHERE username = ?"
 		  var ps as MySQLPreparedStatement = Session.DB.Prepare(sql)
-		  ps.BindType (0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
 		  ps.Bind(0, txtUsername.Text.Trim)
-		  var rs as rowset = ps.SelectSQL
-		  
-		  if rs <> nil then
-		    password_hash = rs.Column("password_hash").StringValue
-		  else
-		    loginError = loginError + 1
+		  var rs as RowSet = ps.SelectSQL
+
+		  if rs = nil or rs.AfterLastRow then
+		    MessageBox("Error logging in. Check that username and password are correct.")
+		    Return
 		  end if
-		  
+
+		  var stored_hash as string = rs.Column("password_hash").StringValue
+		  var isOTP as Boolean = (rs.Column("password_is_OTP").IntegerValue = 1)
+		  var userID as Integer = rs.Column("id").IntegerValue
+		  var username as string = rs.Column("username").StringValue
+
+		  // Calculate hash of entered password
 		  sql = "SELECT SHA2(?, 256) as calculated_hash"
 		  ps = Session.DB.Prepare(sql)
 		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
 		  ps.Bind(0, txtPassword.Text.Trim)
-		  rs = ps.SelectSQL
-		  var calculated_hash as string = rs.Column("calculated_hash").StringValue
-		  
-		  if calculated_hash = password_hash then
-		    MessageBox("Successful login!")
-		  else
-		    loginError = loginError + 1
-		    if loginError > 0 then MessageBox("Error logging in. Check that username and password are correct.")
+		  var rsHash as RowSet = ps.SelectSQL
+		  var calculated_hash as string = rsHash.Column("calculated_hash").StringValue
+
+		  if calculated_hash <> stored_hash then
+		    MessageBox("Error logging in. Check that username and password are correct.")
+		    Return
 		  end if
+
+		  // Password matches — check if this is an OTP login
+		  if isOTP then
+		    // Store user ID so SetNewPassword knows which user to update
+		    mResetUserID = userID
+		    txtPassword.Text = ""
+		    showRect(LoginSection.NewPassword)
+		    Return
+		  end if
+
+		  // Normal login — set session state and go to review page
+		  Session.CurrentUserID = userID
+		  Session.CurrentUsername = username
+		  Session.IsAuthenticated = True
+		  wp_Review.Show
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GenerateOTP() As String
+		  // Generate a random 8-character alphanumeric OTP
+		  var chars as string = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789"
+		  var otp as string = ""
+		  var rng as new Random
+		  for i as Integer = 1 to 8
+		    otp = otp + chars.Middle(rng.InRange(0, chars.Length - 1), 1)
+		  next
+		  Return otp
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SendOTPEmail(recipientEmail as String, recipientName as String, otp as String)
+		  // Send OTP via MailJet v3.1 Send API
+		  var apiKey as string = Session.kMailJetAPIKey
+		  var secretKey as string = Session.kMailJetSecretKey
+
+		  // Build JSON payload
+		  var msg as new JSONItem
+		  var messages as new JSONItem
+		  messages.Value("From") = new JSONItem
+		  JSONItem(messages.Value("From")).Value("Email") = Session.kSenderEmail
+		  JSONItem(messages.Value("From")).Value("Name") = Session.kSenderName
+
+		  var toArray as new JSONItem
+		  var toObj as new JSONItem
+		  toObj.Value("Email") = recipientEmail
+		  toObj.Value("Name") = recipientName
+		  toArray.Add(toObj)
+		  messages.Value("To") = toArray
+
+		  messages.Value("Subject") = "Your password reset code - Open Access ECHO Audit"
+		  messages.Value("TextPart") = "Your one-time password is: " + otp + EndOfLine + EndOfLine + _
+		  "Use this as your password to log in, then set a new password." + EndOfLine + _
+		  "If you did not request a password reset, please ignore this email."
+		  messages.Value("HTMLPart") = "<h3>Password Reset</h3>" + _
+		  "<p>Your one-time password is:</p>" + _
+		  "<h2 style=""letter-spacing: 3px; font-family: monospace;"">" + otp + "</h2>" + _
+		  "<p>Use this as your password to log in, then set a new password.</p>" + _
+		  "<p><em>If you did not request a password reset, please ignore this email.</em></p>"
+
+		  var msgArray as new JSONItem
+		  msgArray.Add(messages)
+		  msg.Value("Messages") = msgArray
+
+		  var payload as string = msg.ToString
+
+		  // Base64 encode credentials for Basic Auth
+		  var credentials as string = EncodeBase64(apiKey + ":" + secretKey)
+
+		  var conn as new URLConnection
+		  conn.RequestHeader("Content-Type") = "application/json"
+		  conn.RequestHeader("Authorization") = "Basic " + credentials
+		  conn.SetRequestContent(payload, "application/json")
+
+		  var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
+
+		  if conn.HTTPStatusCode < 200 or conn.HTTPStatusCode >= 300 then
+		    System.DebugLog("MailJet error: HTTP " + conn.HTTPStatusCode.ToString + " - " + response)
+		  end if
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DoResetPassword()
+		  if txtEmail.Text.Trim.IsEmpty then
+		    MessageBox("Please enter your email address.")
+		    Return
+		  end if
+
+		  // Always show the same message regardless of whether the email exists
+		  // to prevent email enumeration
+		  var genericMsg as string = "If an account with that email exists, a one-time password has been sent. Use it to log in."
+
+		  // Look up user by email
+		  var sql as string = "SELECT id, name, email FROM users WHERE email = ?"
+		  var ps as MySQLPreparedStatement = Session.DB.Prepare(sql)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.Bind(0, txtEmail.Text.Trim)
+		  var rs as RowSet = ps.SelectSQL
+
+		  if rs = nil or rs.AfterLastRow then
+		    // Email not found — show generic message anyway
+		    MessageBox(genericMsg)
+		    showRect(LoginSection.Login)
+		    Return
+		  end if
+
+		  var userID as Integer = rs.Column("id").IntegerValue
+		  var userName as string = rs.Column("name").StringValue
+		  var userEmail as string = rs.Column("email").StringValue
+
+		  // Generate OTP
+		  var otp as string = GenerateOTP()
+
+		  // Store SHA2 hash of OTP as the password and set password_is_OTP = 1
+		  sql = "UPDATE users SET password_hash = SHA2(?, 256), password_is_OTP = 1 WHERE id = ?"
+		  ps = Session.DB.Prepare(sql)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_LONG)
+		  ps.Bind(0, otp)
+		  ps.Bind(1, userID)
+		  ps.ExecuteSQL
+
+		  // Send OTP email via MailJet
+		  SendOTPEmail(userEmail, userName, otp)
+
+		  MessageBox(genericMsg)
+		  txtEmail.Text = ""
+		  showRect(LoginSection.Login)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DoSetNewPassword()
+		  if txtNewPassword.Text.IsEmpty or txtNewPassword2.Text.IsEmpty then
+		    MessageBox("Please enter and confirm your new password.")
+		    Return
+		  end if
+
+		  if txtNewPassword.Text <> txtNewPassword2.Text then
+		    MessageBox("Passwords do not match. Please try again.")
+		    Return
+		  end if
+
+		  if txtNewPassword.Text.Length < 6 then
+		    MessageBox("Password must be at least 6 characters long.")
+		    Return
+		  end if
+
+		  // Update password and clear OTP flag
+		  var sql as string = "UPDATE users SET password_hash = SHA2(?, 256), password_is_OTP = 0 WHERE id = ?"
+		  var ps as MySQLPreparedStatement = Session.DB.Prepare(sql)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_LONG)
+		  ps.Bind(0, txtNewPassword.Text)
+		  ps.Bind(1, mResetUserID)
+		  ps.ExecuteSQL
+
+		  mResetUserID = 0
+		  txtNewPassword.Text = ""
+		  txtNewPassword2.Text = ""
+
+		  MessageBox("Password updated successfully. Please log in with your new password.")
+		  showRect(LoginSection.Login)
 		End Sub
 	#tag EndMethod
 
@@ -982,6 +1149,11 @@ End
 		  end Select
 		End Sub
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h21
+		Private mResetUserID As Integer = 0
+	#tag EndProperty
 
 
 	#tag Enum, Name = LoginSection, Type = Integer, Flags = &h0
@@ -1053,6 +1225,13 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
+#tag Events btnLogin1
+	#tag Event
+		Sub Pressed()
+		  DoResetPassword
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag Events btnCancelReset
 	#tag Event
 		Sub Pressed()
@@ -1083,9 +1262,17 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
+#tag Events btnSetNewPassword
+	#tag Event
+		Sub Pressed()
+		  DoSetNewPassword
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag Events btnCancelNewPassword
 	#tag Event
 		Sub Pressed()
+		  mResetUserID = 0
 		  showRect(LoginSection.Login)
 		End Sub
 	#tag EndEvent
