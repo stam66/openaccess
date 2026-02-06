@@ -1112,14 +1112,12 @@ End
 
 		  var payload as string = msg.ToString
 
-		  // Base64 encode credentials for Basic Auth
-		  // Strip CRLF that EncodeBase64 inserts every 76 chars (MIME wrapping)
-		  var credentials as string = EncodeBase64(apiKey + ":" + secretKey).ReplaceAll(Chr(13), "").ReplaceAll(Chr(10), "")
-
 		  Try
 		    var conn as new URLConnection
 		    conn.RequestHeader("Content-Type") = "application/json"
-		    conn.RequestHeader("Authorization") = "Basic " + credentials
+		    // Use URLConnection's built-in Basic Auth instead of manual header
+		    conn.UserName = apiKey
+		    conn.Password = secretKey
 		    conn.SetRequestContent(payload, "application/json")
 
 		    var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
