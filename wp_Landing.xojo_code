@@ -1082,8 +1082,6 @@ End
 		  var secretKey as string = Session.kMailJetSecretKey
 
 		  // Build JSON payload
-		  var msg as new JSONItem
-
 		  var fromObj as new JSONItem
 		  fromObj.Value("Email") = Session.kSenderEmail
 		  fromObj.Value("Name") = Session.kSenderName
@@ -1094,22 +1092,22 @@ End
 		  var toArray as new JSONItem
 		  toArray.Add(toObj)
 
-		  var messages as new JSONItem
-		  messages.Value("From") = fromObj
-		  messages.Value("To") = toArray
-
-		  messages.Value("Subject") = "Your password reset code - Open Access ECHO Audit"
-		  messages.Value("TextPart") = "Your one-time password is: " + otp + EndOfLine + EndOfLine + _
-		  "Use this as your password to log in, then set a new password." + EndOfLine + _
+		  var message as new JSONItem
+		  message.Value("From") = fromObj
+		  message.Value("To") = toArray
+		  message.Value("Subject") = "Your password reset code - Open Access ECHO Audit"
+		  message.Value("TextPart") = "Your one-time password is: " + otp + Chr(10) + Chr(10) + _
+		  "Use this as your password to log in, then set a new password." + Chr(10) + _
 		  "If you did not request a password reset, please ignore this email."
-		  messages.Value("HTMLPart") = "<h3>Password Reset</h3>" + _
+		  message.Value("HTMLPart") = "<h3>Password Reset</h3>" + _
 		  "<p>Your one-time password is:</p>" + _
 		  "<h2 style=""letter-spacing: 3px; font-family: monospace;"">" + otp + "</h2>" + _
 		  "<p>Use this as your password to log in, then set a new password.</p>" + _
 		  "<p><em>If you did not request a password reset, please ignore this email.</em></p>"
 
 		  var msgArray as new JSONItem
-		  msgArray.Add(messages)
+		  msgArray.Add(message)
+		  var msg as new JSONItem
 		  msg.Value("Messages") = msgArray
 
 		  var payload as string = msg.ToString
@@ -1117,101 +1115,22 @@ End
 		  // Base64 encode credentials for Basic Auth
 		  var credentials as string = EncodeBase64(apiKey + ":" + secretKey)
 
-		  var conn as new URLConnection
-		  conn.RequestHeader("Content-Type") = "application/json"
-		  conn.RequestHeader("Authorization") = "Basic " + credentials
-		  conn.SetRequestContent(payload, "application/json")
+		  Try
+		    var conn as new URLConnection
+		    conn.RequestHeader("Content-Type") = "application/json"
+		    conn.RequestHeader("Authorization") = "Basic " + credentials
+		    conn.SetRequestContent(payload, "application/json")
 
-		  var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
+		    var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
 
-		  if conn.HTTPStatusCode < 200 or conn.HTTPStatusCode >= 300 then
-		    System.DebugLog("MailJet error: HTTP " + conn.HTTPStatusCode.ToString + " - " + response)
-		  end if
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub DoResetPassword()
-		  if txtEmail.Text.Trim.IsEmpty then
-		    MessageBox("Please enter your email address.")
-		    Return
-		  end if
-
-		  // Always show the same message regardless of whether the email exists
-		  // to prevent email enumeration
-		  var genericMsg as string = "If an account with that email exists, a one-time password has been sent. Use it to log in."
-
-		  // Look up user by email
-		  var sql as string = "SELECT id, name, email FROM users WHERE email = ?"
-		  var ps as MySQLPreparedStatement = Session.DB.Prepare(sql)
-		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		  ps.Bind(0, txtEmail.Text.Trim)
-		  var rs as RowSet = ps.SelectSQL
-
-		  if rs = nil or rs.AfterLastRow then
-		    // Email not found — show generic message anyway
-		    MessageBox(genericMsg)
-		    showRect(LoginSection.Login)
-		    Return
-		  end if
-
-		  var userID as Integer = rs.Column("id").IntegerValue
-		  var userName as string = rs.Column("name").StringValue
-		  var userEmail as string = rs.Column("email").StringValue
-
-		  // Generate OTP
-		  var otp as string = GenerateOTP()
-
-		  // Store SHA2 hash of OTP as the password and set password_is_OTP = 1
-		  sql = "UPDATE users SET password_hash = SHA2(?, 256), password_is_OTP = 1 WHERE id = ?"
-		  ps = Session.DB.Prepare(sql)
-		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		  ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_LONG)
-		  ps.Bind(0, otp)
-		  ps.Bind(1, userID)
-		  ps.ExecuteSQL
-
-		  // Send OTP email via MailJet
-		  SendOTPEmail(userEmail, userName, otp)
-
-		  MessageBox(genericMsg)
-		  txtEmail.Text = ""
-		  showRect(LoginSection.Login)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub DoSetNewPassword()
-		  if txtNewPassword.Text.IsEmpty or txtNewPassword2.Text.IsEmpty then
-		    MessageBox("Please enter and confirm your new password.")
-		    Return
-		  end if
-
-		  if txtNewPassword.Text <> txtNewPassword2.Text then
-		    MessageBox("Passwords do not match. Please try again.")
-		    Return
-		  end if
-
-		  if txtNewPassword.Text.Length < 6 then
-		    MessageBox("Password must be at least 6 characters long.")
-		    Return
-		  end if
-
-		  // Update password and clear OTP flag
-		  var sql as string = "UPDATE users SET password_hash = SHA2(?, 256), password_is_OTP = 0 WHERE id = ?"
-		  var ps as MySQLPreparedStatement = Session.DB.Prepare(sql)
-		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		  ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_LONG)
-		  ps.Bind(0, txtNewPassword.Text)
-		  ps.Bind(1, mResetUserID)
-		  ps.ExecuteSQL
-
-		  mResetUserID = 0
-		  txtNewPassword.Text = ""
-		  txtNewPassword2.Text = ""
-
-		  MessageBox("Password updated successfully. Please log in with your new password.")
-		  showRect(LoginSection.Login)
+		    if conn.HTTPStatusCode < 200 or conn.HTTPStatusCode >= 300 then
+		      System.DebugLog("MailJet error: HTTP " + conn.HTTPStatusCode.ToString + " - " + response)
+		      MessageBox("Email error (HTTP " + conn.HTTPStatusCode.ToString + "): " + response)
+		    end if
+		  Catch err as RuntimeException
+		    System.DebugLog("SendOTPEmail exception: " + err.Message)
+		    MessageBox("Email send error: " + err.Message)
+		  End Try
 		End Sub
 	#tag EndMethod
 
@@ -1223,67 +1142,15 @@ End
 		  txtPassword.Text = ""
 		  txtUsername.Text = ""
 		  showRect(LoginSection.Login)
-		  
+
 		  rectLogin.Top = (self.Height - rectLogin.Height)/2
 		  rectLogin.Left = (self.Width - rectLogin.Width)/2
-		  
+
 		  rectResetPassword.Top = (self.Height - rectResetPassword.Height)/2
 		  rectResetPassword.Left = (self.Width - rectResetPassword.Width)/2
-		  
+
 		  rectSetNewPassword.Top = (self.Height - rectSetNewPassword.Height)/2
 		  rectSetNewPassword.Left = (self.Width - rectSetNewPassword.Width)/2
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub SendOTPEmail(recipientEmail as String, recipientName as String, otp as String)
-		  // Send OTP via MailJet v3.1 Send API
-		  var apiKey as string = Session.kMailJetAPIKey
-		  var secretKey as string = Session.kMailJetSecretKey
-		  
-		  // Build JSON payload
-		  var msg as new JSONItem
-		  var messages as new JSONItem
-		  messages.Value("From") = new JSONItem
-		  JSONItem(messages.Value("From")).Value("Email") = Session.kSenderEmail
-		  JSONItem(messages.Value("From")).Value("Name") = Session.kSenderName
-		  
-		  var toArray as new JSONItem
-		  var toObj as new JSONItem
-		  toObj.Value("Email") = recipientEmail
-		  toObj.Value("Name") = recipientName
-		  toArray.Add(toObj)
-		  messages.Value("To") = toArray
-		  
-		  messages.Value("Subject") = "Your password reset code - Open Access ECHO Audit"
-		  messages.Value("TextPart") = "Your one-time password is: " + otp + EndOfLine + EndOfLine + _
-		  "Use this as your password to log in, then set a new password." + EndOfLine + _
-		  "If you did not request a password reset, please ignore this email."
-		  messages.Value("HTMLPart") = "<h3>Password Reset</h3>" + _
-		  "<p>Your one-time password is:</p>" + _
-		  "<h2 style=""letter-spacing: 3px; font-family: monospace;"">" + otp + "</h2>" + _
-		  "<p>Use this as your password to log in, then set a new password.</p>" + _
-		  "<p><em>If you did not request a password reset, please ignore this email.</em></p>"
-		  
-		  var msgArray as new JSONItem
-		  msgArray.Add(messages)
-		  msg.Value("Messages") = msgArray
-		  
-		  var payload as string = msg.ToString
-		  
-		  // Base64 encode credentials for Basic Auth
-		  var credentials as string = EncodeBase64(apiKey + ":" + secretKey)
-		  
-		  var conn as new URLConnection
-		  conn.RequestHeader("Content-Type") = "application/json"
-		  conn.RequestHeader("Authorization") = "Basic " + credentials
-		  conn.SetRequestContent(payload, "application/json")
-		  
-		  var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
-		  
-		  if conn.HTTPStatusCode < 200 or conn.HTTPStatusCode >= 300 then
-		    System.DebugLog("MailJet error: HTTP " + conn.HTTPStatusCode.ToString + " - " + response)
-		  end if
 		End Sub
 	#tag EndMethod
 
