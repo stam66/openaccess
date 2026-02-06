@@ -1113,7 +1113,8 @@ End
 		  var payload as string = msg.ToString
 
 		  // Base64 encode credentials for Basic Auth
-		  var credentials as string = EncodeBase64(apiKey + ":" + secretKey)
+		  // Strip CRLF that EncodeBase64 inserts every 76 chars (MIME wrapping)
+		  var credentials as string = EncodeBase64(apiKey + ":" + secretKey).ReplaceAll(Chr(13), "").ReplaceAll(Chr(10), "")
 
 		  Try
 		    var conn as new URLConnection
