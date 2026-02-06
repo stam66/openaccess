@@ -982,16 +982,19 @@ End
 
 		  // Build JSON payload
 		  var msg as new JSONItem
-		  var messages as new JSONItem
-		  messages.Value("From") = new JSONItem
-		  JSONItem(messages.Value("From")).Value("Email") = Session.kSenderEmail
-		  JSONItem(messages.Value("From")).Value("Name") = Session.kSenderName
 
-		  var toArray as new JSONItem
+		  var fromObj as new JSONItem
+		  fromObj.Value("Email") = Session.kSenderEmail
+		  fromObj.Value("Name") = Session.kSenderName
+
 		  var toObj as new JSONItem
 		  toObj.Value("Email") = recipientEmail
 		  toObj.Value("Name") = recipientName
+		  var toArray as new JSONItem
 		  toArray.Add(toObj)
+
+		  var messages as new JSONItem
+		  messages.Value("From") = fromObj
 		  messages.Value("To") = toArray
 
 		  messages.Value("Subject") = "Your password reset code - Open Access ECHO Audit"
