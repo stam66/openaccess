@@ -32,6 +32,7 @@ Begin WebPage wp_Review
    _ImplicitInstance=   False
    _mDesignHeight  =   0
    _mDesignWidth   =   0
+   _mName          =   ""
    _mPanelIndex    =   -1
    Begin WebListBox lstIdentifiers
       AllowRowReordering=   False
@@ -118,7 +119,7 @@ Begin WebPage wp_Review
       Height          =   63
       Hint            =   ""
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Left            =   203
       LockBottom      =   False
       LockedInPosition=   False
@@ -151,7 +152,7 @@ Begin WebPage wp_Review
       Height          =   128
       Hint            =   ""
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Left            =   203
       LockBottom      =   False
       LockedInPosition=   False
@@ -183,7 +184,7 @@ Begin WebPage wp_Review
       FontSize        =   0.0
       Height          =   38
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Italic          =   False
       Left            =   203
       LockBottom      =   False
@@ -217,7 +218,7 @@ Begin WebPage wp_Review
       FontSize        =   0.0
       Height          =   38
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Italic          =   False
       Left            =   203
       LockBottom      =   False
@@ -251,7 +252,7 @@ Begin WebPage wp_Review
       FontSize        =   0.0
       Height          =   38
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Italic          =   False
       Left            =   373
       LockBottom      =   False
@@ -285,7 +286,7 @@ Begin WebPage wp_Review
       Enabled         =   True
       Height          =   38
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       InitialValue    =   ""
       LatestDate      =   ""
       Left            =   421
@@ -408,7 +409,7 @@ Begin WebPage wp_Review
       FontSize        =   0.0
       Height          =   38
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Italic          =   False
       Left            =   196
       LockBottom      =   False
@@ -442,7 +443,7 @@ Begin WebPage wp_Review
       FontSize        =   0.0
       Height          =   38
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Italic          =   False
       Left            =   534
       LockBottom      =   False
@@ -476,7 +477,7 @@ Begin WebPage wp_Review
       FontSize        =   0.0
       Height          =   38
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Italic          =   False
       Left            =   196
       LockBottom      =   False
@@ -511,7 +512,7 @@ Begin WebPage wp_Review
       Height          =   43
       Hint            =   ""
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Left            =   203
       LockBottom      =   False
       LockedInPosition=   False
@@ -543,7 +544,7 @@ Begin WebPage wp_Review
       FontSize        =   0.0
       Height          =   38
       Index           =   -2147483648
-      Indicator       =   ""
+      Indicator       =   0
       Italic          =   False
       Left            =   203
       LockBottom      =   False
@@ -749,8 +750,6 @@ End
 
 #tag EndWindowCode
 
-#tag Events btnCopy
-#tag EndEvents
 #tag Events btnPREP
 	#tag Event
 		Sub Pressed()

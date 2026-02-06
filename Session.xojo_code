@@ -10,11 +10,60 @@ Inherits WebSession
   SendEventsInBatches=False
   LazyLoadDependencies=False
 #tag EndSession
-	#tag Method, Flags = &h0
-		Sub connect()
-		  
+	#tag Event
+		Sub Opening()
+		  IsConnected = connect()
 		End Sub
+	#tag EndEvent
+
+
+	#tag Method, Flags = &h0
+		Function connect() As Boolean
+		  DB = New MySQLCommunityServer
+		  
+		  if DebugBuild then
+		    DB.UserName = "admin" 
+		    DB.Password = "reject66" 
+		  else
+		    db.UserName = "dbadmin"
+		    db.Password = "tDw3pbEcBEfec7fc"
+		  end if
+		  DB.Host = "127.0.0.1"
+		  DB.Port = 3306
+		  DB.DatabaseName = "openaccess"
+		  
+		  Try
+		    DB.Connect
+		    System.DebugLog("Database connected.")
+		    Return True
+		  Catch err As DatabaseException
+		    System.DebugLog("Database connection error: " + err.Message)
+		    Return False
+		  End Try
+		  
+		End Function
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h0
+		CurrentUserID As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		CurrentUsername As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		DB As MySQLCommunityServer
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		IsAuthenticated As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		IsConnected As Boolean
+	#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -241,6 +290,46 @@ Inherits WebSession
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="LazyLoadDependencies"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="DB"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="MySQLCommunityServer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="CurrentUserID"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="CurrentUsername"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsAuthenticated"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsConnected"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
