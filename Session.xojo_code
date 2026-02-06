@@ -65,13 +65,14 @@ Inherits WebSession
 		IsConnected As Boolean
 	#tag EndProperty
 
-	#tag Constant, Name = kMailJetAPIKey, Type = String, Dynamic = False, Default = \"YOUR_MAILJET_API_KEY_HERE", Scope = Public
+
+	#tag Constant, Name = kMailJetAPIKey, Type = String, Dynamic = False, Default = \"aeb158a2ac1a32e526b124a2cb7aa3a7", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = kMailJetSecretKey, Type = String, Dynamic = False, Default = \"YOUR_MAILJET_SECRET_KEY_HERE", Scope = Public
+	#tag Constant, Name = kMailJetSecretKey, Type = String, Dynamic = False, Default = \"384238973b036e63d5240aa0a3cfa65a", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = kSenderEmail, Type = String, Dynamic = False, Default = \"noreply@openaccess-audit.com", Scope = Public
+	#tag Constant, Name = kSenderEmail, Type = String, Dynamic = False, Default = \"info@echoindications.org", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = kSenderName, Type = String, Dynamic = False, Default = \"Open Access ECHO Audit", Scope = Public

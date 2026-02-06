@@ -32,7 +32,6 @@ Begin WebPage wp_Review
    _ImplicitInstance=   False
    _mDesignHeight  =   0
    _mDesignWidth   =   0
-   _mName          =   ""
    _mPanelIndex    =   -1
    Begin WebListBox lstIdentifiers
       AllowRowReordering=   False
@@ -692,7 +691,7 @@ Begin WebPage wp_Review
       Height          =   38
       Index           =   -2147483648
       Indicator       =   0
-      Left            =   974
+      Left            =   569
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -704,6 +703,36 @@ Begin WebPage wp_Review
       PanelIndex      =   0
       Scope           =   0
       TabIndex        =   25
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   11
+      Visible         =   True
+      Width           =   120
+      _mPanelIndex    =   -1
+   End
+   Begin WebButton btnPREP1
+      AllowAutoDisable=   False
+      Cancel          =   False
+      Caption         =   "Logout"
+      ControlID       =   ""
+      CSSClasses      =   ""
+      Default         =   False
+      Enabled         =   True
+      Height          =   38
+      Index           =   -2147483648
+      Indicator       =   0
+      Left            =   1010
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Outlined        =   False
+      PanelIndex      =   0
+      Scope           =   0
+      TabIndex        =   26
       TabStop         =   True
       Tooltip         =   ""
       Top             =   11
@@ -755,6 +784,17 @@ End
 		Sub Pressed()
 		  CopyStringToClipboardHelper.SetCopyText(btnCopy, "Text to kopiera")
 		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events btnPREP1
+	#tag Event
+		Sub Pressed()
+		  session.CurrentUserID = 0
+		  session.CurrentUsername = ""
+		  session.IsAuthenticated = False
+		  var w as new wp_Landing
+		  w.Show
 		End Sub
 	#tag EndEvent
 #tag EndEvents

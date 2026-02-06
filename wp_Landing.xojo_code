@@ -90,7 +90,7 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          MaximumCharactersAllowed=   0
          PanelIndex      =   0
-         Parent          =   "Rectangle1"
+         Parent          =   "rectLogin"
          ReadOnly        =   False
          Scope           =   0
          TabIndex        =   0
@@ -126,7 +126,7 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Multiline       =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle1"
+         Parent          =   "rectLogin"
          Scope           =   0
          TabIndex        =   1
          TabPanelIndex   =   0
@@ -163,7 +163,7 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Multiline       =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle1"
+         Parent          =   "rectLogin"
          Scope           =   0
          TabIndex        =   2
          TabPanelIndex   =   0
@@ -201,7 +201,7 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          MaximumCharactersAllowed=   0
          PanelIndex      =   0
-         Parent          =   "Rectangle1"
+         Parent          =   "rectLogin"
          ReadOnly        =   False
          Scope           =   0
          TabIndex        =   3
@@ -237,7 +237,7 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Outlined        =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle1"
+         Parent          =   "rectLogin"
          Scope           =   0
          TabIndex        =   4
          TabPanelIndex   =   0
@@ -270,7 +270,7 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Multiline       =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle1"
+         Parent          =   "rectLogin"
          Scope           =   0
          TabIndex        =   5
          TabPanelIndex   =   0
@@ -309,6 +309,7 @@ Begin WebPage wp_Landing
          Parent          =   "rectLogin"
          Scope           =   0
          TabIndex        =   29
+         TabPanelIndex   =   0
          TabStop         =   True
          Tooltip         =   ""
          Top             =   427
@@ -407,7 +408,7 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Outlined        =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle3"
+         Parent          =   "rectResetPassword"
          Scope           =   0
          TabIndex        =   23
          TabPanelIndex   =   -1
@@ -440,7 +441,7 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Multiline       =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle3"
+         Parent          =   "rectResetPassword"
          Scope           =   0
          TabIndex        =   24
          TabPanelIndex   =   -1
@@ -478,10 +479,11 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          MaximumCharactersAllowed=   0
          PanelIndex      =   0
-         Parent          =   "Rectangle3"
+         Parent          =   "rectResetPassword"
          ReadOnly        =   False
          Scope           =   0
          TabIndex        =   25
+         TabPanelIndex   =   0
          TabStop         =   True
          Text            =   ""
          TextAlignment   =   0
@@ -513,9 +515,10 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Multiline       =   True
          PanelIndex      =   0
-         Parent          =   "Rectangle3"
+         Parent          =   "rectResetPassword"
          Scope           =   0
          TabIndex        =   26
+         TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Enter the email associated with the account to reset.\nIf the account exists, you will receive an email with\na one-time password."
          TextAlignment   =   2
@@ -551,6 +554,7 @@ Begin WebPage wp_Landing
          Parent          =   "rectResetPassword"
          Scope           =   0
          TabIndex        =   27
+         TabPanelIndex   =   0
          TabStop         =   True
          Tooltip         =   ""
          Top             =   575
@@ -651,9 +655,10 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Outlined        =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle2"
+         Parent          =   "rectSetNewPassword"
          Scope           =   0
          TabIndex        =   0
+         TabPanelIndex   =   0
          TabStop         =   True
          Tooltip         =   ""
          Top             =   575
@@ -684,10 +689,11 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          MaximumCharactersAllowed=   0
          PanelIndex      =   0
-         Parent          =   "Rectangle2"
+         Parent          =   "rectSetNewPassword"
          ReadOnly        =   False
          Scope           =   0
          TabIndex        =   2
+         TabPanelIndex   =   0
          TabStop         =   True
          Text            =   ""
          TextAlignment   =   0
@@ -719,9 +725,10 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Multiline       =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle2"
+         Parent          =   "rectSetNewPassword"
          Scope           =   0
          TabIndex        =   3
+         TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Repeat New Password"
          TextAlignment   =   0
@@ -756,10 +763,11 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          MaximumCharactersAllowed=   0
          PanelIndex      =   0
-         Parent          =   "Rectangle2"
+         Parent          =   "rectSetNewPassword"
          ReadOnly        =   False
          Scope           =   0
          TabIndex        =   4
+         TabPanelIndex   =   0
          TabStop         =   True
          Text            =   ""
          TextAlignment   =   0
@@ -791,9 +799,10 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Multiline       =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle2"
+         Parent          =   "rectSetNewPassword"
          Scope           =   0
          TabIndex        =   5
+         TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "New Password"
          TextAlignment   =   0
@@ -827,9 +836,10 @@ Begin WebPage wp_Landing
          LockVertical    =   False
          Outlined        =   False
          PanelIndex      =   0
-         Parent          =   "Rectangle2"
+         Parent          =   "rectSetNewPassword"
          Scope           =   0
          TabIndex        =   17
+         TabPanelIndex   =   0
          TabStop         =   True
          Tooltip         =   ""
          Top             =   575
@@ -880,6 +890,12 @@ End
 
 #tag WindowCode
 	#tag Event
+		Sub Opening()
+		  CenterLogin
+		End Sub
+	#tag EndEvent
+
+	#tag Event
 		Sub Resized()
 		  rectLogin.Top = (self.Height - rectLogin.Height)/2
 		  rectLogin.Left = (self.Width - rectLogin.Width)/2
@@ -913,24 +929,24 @@ End
 		    MessageBox("Both username and password need to be entered.")
 		    Return
 		  end if
-
+		  
 		  // Look up the user
 		  var sql as string = "SELECT id, username, password_hash, password_is_OTP FROM users WHERE username = ?"
 		  var ps as MySQLPreparedStatement = Session.DB.Prepare(sql)
 		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
 		  ps.Bind(0, txtUsername.Text.Trim)
 		  var rs as RowSet = ps.SelectSQL
-
+		  
 		  if rs = nil or rs.AfterLastRow then
 		    MessageBox("Error logging in. Check that username and password are correct.")
 		    Return
 		  end if
-
+		  
 		  var stored_hash as string = rs.Column("password_hash").StringValue
 		  var isOTP as Boolean = (rs.Column("password_is_OTP").IntegerValue = 1)
 		  var userID as Integer = rs.Column("id").IntegerValue
 		  var username as string = rs.Column("username").StringValue
-
+		  
 		  // Calculate hash of entered password
 		  sql = "SELECT SHA2(?, 256) as calculated_hash"
 		  ps = Session.DB.Prepare(sql)
@@ -938,12 +954,12 @@ End
 		  ps.Bind(0, txtPassword.Text.Trim)
 		  var rsHash as RowSet = ps.SelectSQL
 		  var calculated_hash as string = rsHash.Column("calculated_hash").StringValue
-
+		  
 		  if calculated_hash <> stored_hash then
 		    MessageBox("Error logging in. Check that username and password are correct.")
 		    Return
 		  end if
-
+		  
 		  // Password matches — check if this is an OTP login
 		  if isOTP then
 		    // Store user ID so SetNewPassword knows which user to update
@@ -952,12 +968,97 @@ End
 		    showRect(LoginSection.NewPassword)
 		    Return
 		  end if
-
+		  
 		  // Normal login — set session state and go to review page
 		  Session.CurrentUserID = userID
 		  Session.CurrentUsername = username
 		  Session.IsAuthenticated = True
 		  wp_Review.Show
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DoResetPassword()
+		  if txtEmail.Text.Trim.IsEmpty then
+		    MessageBox("Please enter your email address.")
+		    Return
+		  end if
+		  
+		  // Always show the same message regardless of whether the email exists
+		  // to prevent email enumeration
+		  var genericMsg as string = "If an account with that email exists, a one-time password has been sent. Log in using this and you will be prompted to create a new password."
+		  
+		  // Look up user by email
+		  var sql as string = "SELECT id, name, email FROM users WHERE email = ?"
+		  var ps as MySQLPreparedStatement = Session.DB.Prepare(sql)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.Bind(0, txtEmail.Text.Trim)
+		  var rs as RowSet = ps.SelectSQL
+		  
+		  if rs = nil or rs.AfterLastRow then
+		    // Email not found — show generic message anyway
+		    MessageBox(genericMsg)
+		    showRect(LoginSection.Login)
+		    Return
+		  end if
+		  
+		  var userID as Integer = rs.Column("id").IntegerValue
+		  var userName as string = rs.Column("name").StringValue
+		  var userEmail as string = rs.Column("email").StringValue
+		  
+		  // Generate OTP
+		  var otp as string = GenerateOTP()
+		  
+		  // Store SHA2 hash of OTP as the password and set password_is_OTP = 1
+		  sql = "UPDATE users SET password_hash = SHA2(?, 256), password_is_OTP = 1 WHERE id = ?"
+		  ps = Session.DB.Prepare(sql)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_LONG)
+		  ps.Bind(0, otp)
+		  ps.Bind(1, userID)
+		  ps.ExecuteSQL
+		  
+		  // Send OTP email via MailJet
+		  SendOTPEmail(userEmail, userName, otp)
+		  
+		  MessageBox(genericMsg)
+		  txtEmail.Text = ""
+		  showRect(LoginSection.Login)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DoSetNewPassword()
+		  if txtNewPassword.Text.IsEmpty or txtNewPassword2.Text.IsEmpty then
+		    MessageBox("Please enter and confirm your new password.")
+		    Return
+		  end if
+		  
+		  if txtNewPassword.Text <> txtNewPassword2.Text then
+		    MessageBox("Passwords do not match. Please try again.")
+		    Return
+		  end if
+		  
+		  if txtNewPassword.Text.Length < 6 then
+		    MessageBox("Password must be at least 6 characters long.")
+		    Return
+		  end if
+		  
+		  // Update password and clear OTP flag
+		  var sql as string = "UPDATE users SET password_hash = SHA2(?, 256), password_is_OTP = 0 WHERE id = ?"
+		  var ps as MySQLPreparedStatement = Session.DB.Prepare(sql)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_LONG)
+		  ps.Bind(0, txtNewPassword.Text)
+		  ps.Bind(1, mResetUserID)
+		  ps.ExecuteSQL
+		  
+		  mResetUserID = 0
+		  txtNewPassword.Text = ""
+		  txtNewPassword2.Text = ""
+		  
+		  MessageBox("Password updated successfully. Please log in with your new password.")
+		  showRect(LoginSection.Login)
 		End Sub
 	#tag EndMethod
 
@@ -1135,6 +1236,58 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub SendOTPEmail(recipientEmail as String, recipientName as String, otp as String)
+		  // Send OTP via MailJet v3.1 Send API
+		  var apiKey as string = Session.kMailJetAPIKey
+		  var secretKey as string = Session.kMailJetSecretKey
+		  
+		  // Build JSON payload
+		  var msg as new JSONItem
+		  var messages as new JSONItem
+		  messages.Value("From") = new JSONItem
+		  JSONItem(messages.Value("From")).Value("Email") = Session.kSenderEmail
+		  JSONItem(messages.Value("From")).Value("Name") = Session.kSenderName
+		  
+		  var toArray as new JSONItem
+		  var toObj as new JSONItem
+		  toObj.Value("Email") = recipientEmail
+		  toObj.Value("Name") = recipientName
+		  toArray.Add(toObj)
+		  messages.Value("To") = toArray
+		  
+		  messages.Value("Subject") = "Your password reset code - Open Access ECHO Audit"
+		  messages.Value("TextPart") = "Your one-time password is: " + otp + EndOfLine + EndOfLine + _
+		  "Use this as your password to log in, then set a new password." + EndOfLine + _
+		  "If you did not request a password reset, please ignore this email."
+		  messages.Value("HTMLPart") = "<h3>Password Reset</h3>" + _
+		  "<p>Your one-time password is:</p>" + _
+		  "<h2 style=""letter-spacing: 3px; font-family: monospace;"">" + otp + "</h2>" + _
+		  "<p>Use this as your password to log in, then set a new password.</p>" + _
+		  "<p><em>If you did not request a password reset, please ignore this email.</em></p>"
+		  
+		  var msgArray as new JSONItem
+		  msgArray.Add(messages)
+		  msg.Value("Messages") = msgArray
+		  
+		  var payload as string = msg.ToString
+		  
+		  // Base64 encode credentials for Basic Auth
+		  var credentials as string = EncodeBase64(apiKey + ":" + secretKey)
+		  
+		  var conn as new URLConnection
+		  conn.RequestHeader("Content-Type") = "application/json"
+		  conn.RequestHeader("Authorization") = "Basic " + credentials
+		  conn.SetRequestContent(payload, "application/json")
+		  
+		  var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
+		  
+		  if conn.HTTPStatusCode < 200 or conn.HTTPStatusCode >= 300 then
+		    System.DebugLog("MailJet error: HTTP " + conn.HTTPStatusCode.ToString + " - " + response)
+		  end if
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub showRect(section as LoginSection)
 		  rectLogin.Visible = false
 		  rectResetPassword.Visible = false
@@ -1176,6 +1329,9 @@ End
 		  else
 		    me.FillColor = Color.RGB(253,253,253)
 		  end if
+		  
+		  me.Top = (self.Height - me.Height)/2
+		  me.Left = (self.Width - me.Width)/2
 		End Sub
 	#tag EndEvent
 	#tag Event
@@ -1185,9 +1341,6 @@ End
 		  else
 		    me.FillColor = Color.RGB(253,253,253)
 		  end if
-		  
-		  me.Top = (self.Height - me.Height)/2
-		  me.Left = (self.Width - me.Width)/2
 		End Sub
 	#tag EndEvent
 #tag EndEvents
