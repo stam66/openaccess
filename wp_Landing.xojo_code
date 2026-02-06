@@ -1112,13 +1112,12 @@ End
 
 		  var payload as string = msg.ToString
 
-		  // Base64 encode credentials for Basic Auth
-		  var credentials as string = EncodeBase64(apiKey + ":" + secretKey)
-
 		  Try
 		    var conn as new URLConnection
 		    conn.RequestHeader("Content-Type") = "application/json"
-		    conn.RequestHeader("Authorization") = "Basic " + credentials
+		    // Use URLConnection's built-in Basic Auth instead of manual header
+		    conn.UserName = apiKey
+		    conn.Password = secretKey
 		    conn.SetRequestContent(payload, "application/json")
 
 		    var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
