@@ -881,6 +881,16 @@ End
 		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
 		    ps.Bind(0, "completed")
 		  else
+		    var statusStr as string
+		    select case filter
+		    case FilterByStatus.not_started
+		      statusStr = "not_started"
+		    case FilterByStatus.in_progress
+		      statusStr = "in_progress"
+		    case FilterByStatus.completed
+		      statusStr = "completed"
+		    end select
+
 		    sql = _
 		    "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
 		    "FROM echo_requests"  + EndOfLine +_
@@ -889,7 +899,7 @@ End
 		    "ORDER BY echo_requests.referral_date ASC"
 		    ps = session.DB.Prepare(sql)
 		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		    ps.Bind(0, filter)
+		    ps.Bind(0, statusStr)
 		  end if
 		  
 		  var rs as RowSet = ps.SelectSQL
@@ -989,7 +999,7 @@ End
 		  var s as string = me.SegmentAt(segmentIndex).Caption
 		  var filter As FilterByStatus
 		  select case s
-		  case "incmplete"
+		  case "Incomplete"
 		    filter = FilterByStatus.incomplete
 		  case "all"
 		    filter = FilterByStatus.All
@@ -997,7 +1007,7 @@ End
 		    filter = FilterByStatus.not_started
 		  case "in progress"
 		    filter = FilterByStatus.in_progress
-		  case "completed"
+		  case "Complete"
 		    filter = FilterByStatus.completed
 		  end Select
 		  
