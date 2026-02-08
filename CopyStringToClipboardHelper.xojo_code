@@ -1,6 +1,30 @@
 #tag Module
 Protected Module CopyStringToClipboardHelper
 	#tag Method, Flags = &h0
+		Sub CopyTextDirectly(textValue As String, page As WebPage)
+		  // Copy text directly without needing a button
+		  Dim escaped As String = textValue
+		  escaped = escaped.ReplaceAll("\", "\\")
+		  escaped = escaped.ReplaceAll("'", "\'")
+		  escaped = escaped.ReplaceAll(Chr(10), "\n")
+		  escaped = escaped.ReplaceAll(Chr(13), "")
+		  
+		  Dim js As String
+		  js = "var temp = document.createElement('textarea');" + _
+		  "temp.value = '" + escaped + "';" + _
+		  "temp.style.position = 'fixed';" + _
+		  "temp.style.left = '-9999px';" + _
+		  "document.body.appendChild(temp);" + _
+		  "temp.focus();" + _
+		  "temp.select();" + _
+		  "document.execCommand('copy');" + _
+		  "document.body.removeChild(temp);"
+		  
+		  page.ExecuteJavaScript(js)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub SetCopyText(btn As WebButton, textValue As String)
 		  
 		  Dim escaped As String = textValue
@@ -15,22 +39,6 @@ Protected Module CopyStringToClipboardHelper
 		  "if (btn) btn.setAttribute('data-copy-text', '" + escaped + "');"
 		  
 		  btn.Page.ExecuteJavaScript(js)
-		  
-		  
-		  
-		  ' 
-		  ' // Set what gets copied for this button
-		  ' Dim escaped As String = textValue
-		  ' escaped = escaped.ReplaceAll("&", "&amp;")
-		  ' escaped = escaped.ReplaceAll("""", "&quot;")
-		  ' escaped = escaped.ReplaceAll("'", "&#39;")
-		  ' 
-		  ' Dim js As String
-		  ' js = "var btn = document.getElementById('" + btn.ControlID + "');" + _
-		  ' "if (btn) btn.setAttribute('data-copy-text', '" + escaped + "');"
-		  ' 
-		  ' page.ExecuteJavaScript(js)
-		  
 		End Sub
 	#tag EndMethod
 
@@ -58,35 +66,33 @@ Protected Module CopyStringToClipboardHelper
 		  "}, 100);"
 		  
 		  btn.Page.ExecuteJavaScript(js)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SetupCopyOnListBoxDoubleClick(listbox As WebListBox)
+		  Var js As String
+		  js = "setTimeout(function() {" + _
+		  "  var container = document.getElementById('" + listbox.ControlID + "');" + _
+		  "  if (container) {" + _
+		  "    container.addEventListener('dblclick', function(e) {" + _
+		  "      var textToCopy = this.getAttribute('data-copy-text');" + _
+		  "      if (textToCopy) {" + _
+		  "        var temp = document.createElement('textarea');" + _
+		  "        temp.value = textToCopy;" + _
+		  "        temp.style.position = 'fixed';" + _
+		  "        temp.style.left = '-9999px';" + _
+		  "        document.body.appendChild(temp);" + _
+		  "        temp.focus();" + _
+		  "        temp.select();" + _
+		  "        document.execCommand('copy');" + _
+		  "        document.body.removeChild(temp);" + _
+		  "      }" + _
+		  "    });" + _
+		  "  }" + _
+		  "}, 100);"
 		  
-		  
-		  
-		  
-		  
-		  ' // Attach the copy handler to any button
-		  ' Dim js As String
-		  ' js = "setTimeout(function() {" + _
-		  ' "  var btn = document.getElementById('" + btn.ControlID + "');" + _
-		  ' "  if (btn) {" + _
-		  ' "    btn.onclick = function(e) {" + _
-		  ' "      var text = this.getAttribute('data-copy-text');" + _
-		  ' "      if (text) {" + _
-		  ' "        var temp = document.createElement('textarea');" + _
-		  ' "        temp.value = text;" + _
-		  ' "        temp.style.position = 'fixed';" + _
-		  ' "        temp.style.left = '-9999px';" + _
-		  ' "        document.body.appendChild(temp);" + _
-		  ' "        temp.focus();" + _
-		  ' "        temp.select();" + _
-		  ' "        document.execCommand('copy');" + _
-		  ' "        document.body.removeChild(temp);" + _
-		  ' "      }" + _
-		  ' "    };" + _
-		  ' "  }" + _
-		  ' "}, 100);"
-		  ' 
-		  ' page.ExecuteJavaScript(js)
-		  
+		  listbox.Page.ExecuteJavaScript(js)
 		End Sub
 	#tag EndMethod
 
