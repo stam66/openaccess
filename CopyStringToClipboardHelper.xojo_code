@@ -91,6 +91,37 @@ Protected Module CopyStringToClipboardHelper
 	#tag EndMethod
 
 
+	#tag Method, Flags = &h0
+		Sub SetupListBoxDblClickCopy(lb As WebListBox, copyBtn As WebButton)
+		  Dim js As String
+		  js = "setTimeout(function() {" + _
+		  "  var lb = document.getElementById('" + lb.ControlID + "');" + _
+		  "  if (lb) {" + _
+		  "    lb.addEventListener('dblclick', function(e) {" + _
+		  "      var btn = document.getElementById('" + copyBtn.ControlID + "');" + _
+		  "      if (btn) {" + _
+		  "        var text = btn.getAttribute('data-copy-text');" + _
+		  "        if (text) {" + _
+		  "          var temp = document.createElement('textarea');" + _
+		  "          temp.value = text;" + _
+		  "          temp.style.position = 'fixed';" + _
+		  "          temp.style.left = '-9999px';" + _
+		  "          document.body.appendChild(temp);" + _
+		  "          temp.focus();" + _
+		  "          temp.select();" + _
+		  "          document.execCommand('copy');" + _
+		  "          document.body.removeChild(temp);" + _
+		  "        }" + _
+		  "      }" + _
+		  "    });" + _
+		  "  }" + _
+		  "}, 200);"
+
+		  lb.Page.ExecuteJavaScript(js)
+		End Sub
+	#tag EndMethod
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Name"
