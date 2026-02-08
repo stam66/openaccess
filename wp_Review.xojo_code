@@ -89,7 +89,7 @@ Begin WebPage wp_Review
       Height          =   38
       Index           =   -2147483648
       Indicator       =   0
-      Left            =   -138
+      Left            =   590
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -856,7 +856,7 @@ End
 		Sub Shown()
 		  CopyStringToClipboardHelper.SetupCopyButton(btnCopy)
 		  CopyStringToClipboardHelper.SetupListBoxDblClickCopy(lstIdentifiers, btnCopy)
-
+		  
 		End Sub
 	#tag EndEvent
 
@@ -1062,6 +1062,8 @@ End
 		Sub DoublePressed(row As Integer, column As Integer)
 		  #Pragma Unused row
 		  #Pragma Unused column
+		  
+		  ExecuteJavaScript("document.getElementsByName('btnCopy')[0].click() ;  " )
 		End Sub
 	#tag EndEvent
 #tag EndEvents
