@@ -1076,22 +1076,42 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub ResetUI()
+		  txtEmail.Text = ""
+		  txtNewPassword.Text = ""
+		  txtNewPassword2.Text = ""
+		  txtPassword.Text = ""
+		  txtUsername.Text = ""
+		  showRect(LoginSection.Login)
+		  
+		  rectLogin.Top = (self.Height - rectLogin.Height)/2
+		  rectLogin.Left = (self.Width - rectLogin.Width)/2
+		  
+		  rectResetPassword.Top = (self.Height - rectResetPassword.Height)/2
+		  rectResetPassword.Left = (self.Width - rectResetPassword.Width)/2
+		  
+		  rectSetNewPassword.Top = (self.Height - rectSetNewPassword.Height)/2
+		  rectSetNewPassword.Left = (self.Width - rectSetNewPassword.Width)/2
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub SendOTPEmail(recipientEmail as String, recipientName as String, otp as String)
 		  // Send OTP via MailJet v3.1 Send API
 		  var apiKey as string = Session.kMailJetAPIKey
 		  var secretKey as string = Session.kMailJetSecretKey
-
+		  
 		  // Build JSON payload
 		  var fromObj as new JSONItem
 		  fromObj.Value("Email") = Session.kSenderEmail
 		  fromObj.Value("Name") = Session.kSenderName
-
+		  
 		  var toObj as new JSONItem
 		  toObj.Value("Email") = recipientEmail
 		  toObj.Value("Name") = recipientName
 		  var toArray as new JSONItem
 		  toArray.Add(toObj)
-
+		  
 		  var message as new JSONItem
 		  message.Value("From") = fromObj
 		  message.Value("To") = toArray
@@ -1104,27 +1124,27 @@ End
 		  "<h2 style=""letter-spacing: 3px; font-family: monospace;"">" + otp + "</h2>" + _
 		  "<p>Use this as your password to log in, then set a new password.</p>" + _
 		  "<p><em>If you did not request a password reset, please ignore this email.</em></p>"
-
+		  
 		  var msgArray as new JSONItem
 		  msgArray.Add(message)
 		  var msg as new JSONItem
 		  msg.Value("Messages") = msgArray
-
+		  
 		  var payload as string = msg.ToString
-
+		  
 		  // Base64 encode credentials for Basic Auth
 		  // Strip all CR/LF that Xojo's EncodeBase64 inserts (MIME wrapping at 76 chars + trailing)
 		  var rawB64 as string = EncodeBase64(apiKey + ":" + secretKey)
 		  var credentials as string = rawB64.ReplaceAll(Chr(13), "").ReplaceAll(Chr(10), "")
-
+		  
 		  Try
 		    var conn as new URLConnection
 		    conn.RequestHeader("Content-Type") = "application/json"
 		    conn.RequestHeader("Authorization") = "Basic " + credentials
 		    conn.SetRequestContent(payload, "application/json")
-
+		    
 		    var response as string = conn.SendSync("POST", "https://api.mailjet.com/v3.1/send", 30)
-
+		    
 		    if conn.HTTPStatusCode < 200 or conn.HTTPStatusCode >= 300 then
 		      System.DebugLog("MailJet error: HTTP " + conn.HTTPStatusCode.ToString + " - " + response)
 		      MessageBox("Email error (HTTP " + conn.HTTPStatusCode.ToString + "): " + response)
@@ -1133,26 +1153,6 @@ End
 		    System.DebugLog("SendOTPEmail exception: " + err.Message)
 		    MessageBox("Email send error: " + err.Message)
 		  End Try
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub ResetUI()
-		  txtEmail.Text = ""
-		  txtNewPassword.Text = ""
-		  txtNewPassword2.Text = ""
-		  txtPassword.Text = ""
-		  txtUsername.Text = ""
-		  showRect(LoginSection.Login)
-
-		  rectLogin.Top = (self.Height - rectLogin.Height)/2
-		  rectLogin.Left = (self.Width - rectLogin.Width)/2
-
-		  rectResetPassword.Top = (self.Height - rectResetPassword.Height)/2
-		  rectResetPassword.Left = (self.Width - rectResetPassword.Width)/2
-
-		  rectSetNewPassword.Top = (self.Height - rectSetNewPassword.Height)/2
-		  rectSetNewPassword.Left = (self.Width - rectSetNewPassword.Width)/2
 		End Sub
 	#tag EndMethod
 

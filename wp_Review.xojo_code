@@ -35,8 +35,8 @@ Begin WebPage wp_Review
    _mPanelIndex    =   -1
    Begin WebListBox lstIdentifiers
       AllowRowReordering=   False
-      ColumnCount     =   1
-      ColumnWidths    =   ""
+      ColumnCount     =   2
+      ColumnWidths    =   "80,*"
       ControlID       =   ""
       CSSClasses      =   ""
       DefaultRowHeight=   49
@@ -45,11 +45,11 @@ Begin WebPage wp_Review
       HasBorder       =   True
       HasHeader       =   True
       HeaderHeight    =   0
-      Height          =   752
+      Height          =   606
       HighlightSortedColumn=   True
       Index           =   -2147483648
       Indicator       =   0
-      InitialValue    =   "Study identifier"
+      InitialValue    =   "ID	Status"
       LastAddedRowIndex=   0
       LastColumnIndex =   0
       LastRowIndex    =   0
@@ -73,9 +73,9 @@ Begin WebPage wp_Review
       TabIndex        =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   0
+      Top             =   146
       Visible         =   True
-      Width           =   175
+      Width           =   208
       _mPanelIndex    =   -1
    End
    Begin WebButton btnCopy
@@ -89,7 +89,7 @@ Begin WebPage wp_Review
       Height          =   38
       Index           =   -2147483648
       Indicator       =   0
-      Left            =   203
+      Left            =   589
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -103,9 +103,9 @@ Begin WebPage wp_Review
       TabIndex        =   1
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   11
+      Top             =   20
       Visible         =   True
-      Width           =   139
+      Width           =   110
       _mPanelIndex    =   -1
    End
    Begin WebTextArea txtIndication
@@ -119,7 +119,7 @@ Begin WebPage wp_Review
       Hint            =   ""
       Index           =   -2147483648
       Indicator       =   0
-      Left            =   203
+      Left            =   238
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -136,9 +136,9 @@ Begin WebPage wp_Review
       Text            =   ""
       TextAlignment   =   0
       Tooltip         =   ""
-      Top             =   97
+      Top             =   146
       Visible         =   True
-      Width           =   927
+      Width           =   892
       _mPanelIndex    =   -1
    End
    Begin WebTextArea txtFindings
@@ -152,7 +152,7 @@ Begin WebPage wp_Review
       Hint            =   ""
       Index           =   -2147483648
       Indicator       =   0
-      Left            =   203
+      Left            =   238
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -169,9 +169,9 @@ Begin WebPage wp_Review
       Text            =   ""
       TextAlignment   =   0
       Tooltip         =   ""
-      Top             =   296
+      Top             =   345
       Visible         =   True
-      Width           =   927
+      Width           =   892
       _mPanelIndex    =   -1
    End
    Begin WebLabel lblIndication
@@ -185,7 +185,7 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Italic          =   False
-      Left            =   203
+      Left            =   238
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -202,10 +202,10 @@ Begin WebPage wp_Review
       TextAlignment   =   0
       TextColor       =   &c000000FF
       Tooltip         =   ""
-      Top             =   57
+      Top             =   106
       Underline       =   False
       Visible         =   True
-      Width           =   284
+      Width           =   143
       _mPanelIndex    =   -1
    End
    Begin WebLabel lblFindings
@@ -219,7 +219,7 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Italic          =   False
-      Left            =   203
+      Left            =   238
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -236,10 +236,10 @@ Begin WebPage wp_Review
       TextAlignment   =   0
       TextColor       =   &c000000FF
       Tooltip         =   ""
-      Top             =   256
+      Top             =   305
       Underline       =   False
       Visible         =   True
-      Width           =   284
+      Width           =   143
       _mPanelIndex    =   -1
    End
    Begin WebLabel lblDate
@@ -253,12 +253,12 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Italic          =   False
-      Left            =   373
+      Left            =   956
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Multiline       =   False
@@ -270,40 +270,49 @@ Begin WebPage wp_Review
       TextAlignment   =   0
       TextColor       =   &c000000FF
       Tooltip         =   ""
-      Top             =   11
+      Top             =   103
       Underline       =   False
       Visible         =   True
-      Width           =   40
+      Width           =   44
       _mPanelIndex    =   -1
    End
-   Begin WebDatePicker txtDate
+   Begin WebTextField txtDate
+      AllowAutoComplete=   False
       AllowKeyboardEntry=   True
+      AllowSpellChecking=   False
+      Caption         =   ""
       ControlID       =   ""
       CSSClasses      =   ""
       DisplayFormat   =   0
       EarliestDate    =   ""
       Enabled         =   True
+      FieldType       =   ""
       Height          =   38
+      Hint            =   ""
       Index           =   -2147483648
       Indicator       =   0
       InitialValue    =   ""
       LatestDate      =   ""
-      Left            =   421
+      Left            =   999
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
+      MaximumCharactersAllowed=   0
       PanelIndex      =   0
+      ReadOnly        =   False
       Scope           =   0
       TabIndex        =   11
       TabStop         =   True
+      Text            =   ""
+      TextAlignment   =   ""
       Tooltip         =   ""
-      Top             =   11
+      Top             =   103
       Visible         =   True
-      Width           =   150
+      Width           =   132
       _mPanelIndex    =   -1
    End
    Begin WebPopupMenu popHistoricalGuidelines
@@ -316,13 +325,13 @@ Begin WebPage wp_Review
       InitialValue    =   "Suspcted HF with abnoraml ECG or BNP\nMurmur and no symptoms\nAF and age < 65\nOther (describe)"
       LastAddedRowIndex=   0
       LastRowIndex    =   0
-      Left            =   196
-      LockBottom      =   False
+      Left            =   238
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
       LockRight       =   False
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       PanelIndex      =   0
       RowCount        =   0
@@ -332,9 +341,9 @@ Begin WebPage wp_Review
       TabIndex        =   13
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   513
+      Top             =   537
       Visible         =   True
-      Width           =   330
+      Width           =   567
       _mPanelIndex    =   -1
    End
    Begin WebPopupMenu popRevisedGuidelines
@@ -347,13 +356,13 @@ Begin WebPage wp_Review
       InitialValue    =   "Abnormal ECG\nHypertension\nMurmur and no symptoms\nMurmur plus symptoms suggesgtive of valve disease\nAtrial fibrillation and age < 65 years\nUrgent symptoms (describe)\nOther (describe)"
       LastAddedRowIndex=   0
       LastRowIndex    =   0
-      Left            =   534
-      LockBottom      =   False
+      Left            =   238
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
       LockRight       =   False
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       PanelIndex      =   0
       RowCount        =   0
@@ -363,9 +372,9 @@ Begin WebPage wp_Review
       TabIndex        =   14
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   513
+      Top             =   615
       Visible         =   True
-      Width           =   330
+      Width           =   567
       _mPanelIndex    =   -1
    End
    Begin WebPopupMenu popNewGuidelines
@@ -378,13 +387,13 @@ Begin WebPage wp_Review
       InitialValue    =   "Sustained or paroxymal arrhythmia of new onset or change in clinical status\nLBBB with no previous echocardiogram\nRBBB with clinical suspicion of heart disease\nECG abnormalities: Well-defined bifid p-wave suggestive of mitral stenosis, pathological Q waves or signficant T-wave inversions\nChest pain with family history of sudden cardiac death or inherited cardiomyopathy\nCentral cyanosis (excludes isolated peripheral cyanosis)\nInitial evaluation when there is reasonable suspicion of structural or valvular heart disease\nScreening of relatives of a patient with known or suspected inherited cardiac condition\nSyncope with a confirmed family history of inherited cardiovascular disease\nIntial evaluation in patient with suspected hypertensive heart disease\nSymtpoms of heart failure and NT-proBNP > 400 ng/L (routine referral) or > 2000 ng/L (urgent referral) where no 1-stop HF clinic avaialable\nMurmur and clinical suspicion of cardiovascular disease\nMurmur with no symptoms and age > 60 years\nNew murmur following acute or recent myocardial infarction\n"
       LastAddedRowIndex=   0
       LastRowIndex    =   0
-      Left            =   196
-      LockBottom      =   False
+      Left            =   238
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
       LockRight       =   False
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       PanelIndex      =   0
       RowCount        =   0
@@ -394,9 +403,9 @@ Begin WebPage wp_Review
       TabIndex        =   15
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   632
+      Top             =   694
       Visible         =   True
-      Width           =   668
+      Width           =   567
       _mPanelIndex    =   -1
    End
    Begin WebLabel lblHistoricalGuidelines
@@ -410,13 +419,13 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Italic          =   False
-      Left            =   196
-      LockBottom      =   False
+      Left            =   238
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
       LockRight       =   False
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       Multiline       =   False
       PanelIndex      =   0
@@ -427,7 +436,7 @@ Begin WebPage wp_Review
       TextAlignment   =   0
       TextColor       =   &c000000FF
       Tooltip         =   ""
-      Top             =   481
+      Top             =   505
       Underline       =   False
       Visible         =   True
       Width           =   284
@@ -444,13 +453,13 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Italic          =   False
-      Left            =   534
-      LockBottom      =   False
+      Left            =   238
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
       LockRight       =   False
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       Multiline       =   False
       PanelIndex      =   0
@@ -461,7 +470,7 @@ Begin WebPage wp_Review
       TextAlignment   =   0
       TextColor       =   &c000000FF
       Tooltip         =   ""
-      Top             =   481
+      Top             =   583
       Underline       =   False
       Visible         =   True
       Width           =   284
@@ -478,13 +487,13 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Italic          =   False
-      Left            =   196
-      LockBottom      =   False
+      Left            =   238
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
       LockRight       =   False
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       Multiline       =   False
       PanelIndex      =   0
@@ -495,7 +504,7 @@ Begin WebPage wp_Review
       TextAlignment   =   0
       TextColor       =   &c000000FF
       Tooltip         =   ""
-      Top             =   599
+      Top             =   661
       Underline       =   False
       Visible         =   True
       Width           =   284
@@ -512,7 +521,7 @@ Begin WebPage wp_Review
       Hint            =   ""
       Index           =   -2147483648
       Indicator       =   0
-      Left            =   203
+      Left            =   238
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -529,9 +538,9 @@ Begin WebPage wp_Review
       Text            =   ""
       TextAlignment   =   0
       Tooltip         =   ""
-      Top             =   205
+      Top             =   254
       Visible         =   True
-      Width           =   927
+      Width           =   892
       _mPanelIndex    =   -1
    End
    Begin WebLabel lblActualIndication
@@ -545,7 +554,7 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Italic          =   False
-      Left            =   203
+      Left            =   238
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -562,10 +571,10 @@ Begin WebPage wp_Review
       TextAlignment   =   0
       TextColor       =   &c000000FF
       Tooltip         =   ""
-      Top             =   168
+      Top             =   217
       Underline       =   False
       Visible         =   True
-      Width           =   284
+      Width           =   143
       _mPanelIndex    =   -1
    End
    Begin WebCheckbox chkOldGuideline
@@ -578,12 +587,12 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Left            =   888
-      LockBottom      =   False
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   False
       LockRight       =   True
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       PanelIndex      =   0
       Scope           =   0
@@ -606,12 +615,12 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Left            =   888
-      LockBottom      =   False
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   False
       LockRight       =   True
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       PanelIndex      =   0
       Scope           =   0
@@ -634,12 +643,12 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Left            =   888
-      LockBottom      =   False
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   False
       LockRight       =   True
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       PanelIndex      =   0
       Scope           =   0
@@ -662,12 +671,12 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   0
       Left            =   888
-      LockBottom      =   False
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   False
       LockRight       =   True
-      LockTop         =   True
+      LockTop         =   False
       LockVertical    =   False
       PanelIndex      =   0
       Scope           =   0
@@ -680,37 +689,7 @@ Begin WebPage wp_Review
       Width           =   284
       _mPanelIndex    =   -1
    End
-   Begin WebButton btnPREP
-      AllowAutoDisable=   False
-      Cancel          =   False
-      Caption         =   "Prep copy"
-      ControlID       =   ""
-      CSSClasses      =   ""
-      Default         =   False
-      Enabled         =   True
-      Height          =   38
-      Index           =   -2147483648
-      Indicator       =   0
-      Left            =   569
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Outlined        =   False
-      PanelIndex      =   0
-      Scope           =   0
-      TabIndex        =   25
-      TabStop         =   True
-      Tooltip         =   ""
-      Top             =   11
-      Visible         =   True
-      Width           =   120
-      _mPanelIndex    =   -1
-   End
-   Begin WebButton btnPREP1
+   Begin WebButton btnLogout
       AllowAutoDisable=   False
       Cancel          =   False
       Caption         =   "Logout"
@@ -735,9 +714,104 @@ Begin WebPage wp_Review
       TabIndex        =   26
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   11
+      Top             =   20
       Visible         =   True
       Width           =   120
+      _mPanelIndex    =   -1
+   End
+   Begin WebSegmentedButton SegmentedButton1
+      ControlID       =   ""
+      CSSClasses      =   ""
+      Enabled         =   True
+      Height          =   38
+      Index           =   -2147483648
+      Indicator       =   1
+      LastSegmentIndex=   0
+      Left            =   12
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Outlined        =   False
+      PanelIndex      =   0
+      Scope           =   0
+      SegmentCount    =   0
+      Segments        =   "Incomplete\n\nTrue\rNot started\n\nFalse\rIn progress\n\nFalse\rComplete\n\nFalse\rAll\n\nFalse"
+      SelectedSegmentIndex=   0
+      SelectionStyle  =   1
+      TabIndex        =   27
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   20
+      Visible         =   True
+      Width           =   561
+      _mPanelIndex    =   -1
+   End
+   Begin WebButton Button1
+      AllowAutoDisable=   False
+      Cancel          =   False
+      Caption         =   "Button"
+      ControlID       =   ""
+      CSSClasses      =   ""
+      Default         =   False
+      Enabled         =   True
+      Height          =   38
+      Index           =   -2147483648
+      Indicator       =   0
+      Left            =   813
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Outlined        =   False
+      PanelIndex      =   0
+      Scope           =   0
+      TabIndex        =   28
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   20
+      Visible         =   True
+      Width           =   100
+      _mPanelIndex    =   -1
+   End
+   Begin WebLabel lblFoundCount
+      Bold            =   False
+      ControlID       =   ""
+      CSSClasses      =   ""
+      Enabled         =   True
+      FontName        =   ""
+      FontSize        =   0.0
+      Height          =   38
+      Index           =   -2147483648
+      Indicator       =   0
+      Italic          =   False
+      Left            =   12
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      PanelIndex      =   0
+      Scope           =   0
+      TabIndex        =   29
+      TabStop         =   True
+      Text            =   "xxx Cases"
+      TextAlignment   =   0
+      TextColor       =   &c000000FF
+      Tooltip         =   ""
+      Top             =   106
+      Underline       =   False
+      Visible         =   True
+      Width           =   123
       _mPanelIndex    =   -1
    End
 End
@@ -759,15 +833,106 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetAllRecords() As rowset
+		Function GetRecordByID(id as integer) As Dictionary
+		  var d as Dictionary
+		  var sql as string  = "SELECT * FROM  echo_requests WHERE id = ?"
+		  
+		  var ps as MySQLPreparedStatement = session.DB.Prepare(sql)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.Bind(0, id.ToString)
+		  var rs as RowSet = ps.SelectSQL
+		  
+		  d.Value("id")= rs.Column("id").IntegerValue
+		  d.Value("actionable_findings") = rs.Column("actionable_findings").StringValue
+		  d.Value("conforms_new_guidance")= rs.Column("conforms_new_guidance").StringValue
+		  d.Value("conforms_old_guidance")= rs.Column("conforms_old_guidance").StringValue
+		  d.Value("created_at")= rs.Column("created_at").StringValue
+		  d.Value("echo_findings")= rs.Column("echo_findings").StringValue
+		  d.Value("identifier")= rs.Column("identifier").StringValue
+		  d.Value("referral_date")= rs.Column("referral_date").DateTimeValue
+		  d.Value("referral_indication")= rs.Column("referral_indication").StringValue
+		  d.Value("referral_status")= rs.Column("referral_status").StringValue
+		  d.Value("mrn")= rs.Column("mrn").StringValue
+		  
+		  return d
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetRecords(filter as FilterByStatus) As Dictionary()
+		  var sql as string
+		  var requests() as dictionary
+		  var ps as MySQLPreparedStatement
+		  if filter = FilterByStatus.All then
+		    sql = _
+		    "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
+		    "FROM echo_requests"  + EndOfLine +_
+		    "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
+		    "ORDER BY echo_requests.referral_date ASC"
+		    ps = session.DB.Prepare(sql)
+		  elseif filter = FilterByStatus.incomplete then
+		    sql = _
+		    "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
+		    "FROM echo_requests"  + EndOfLine +_
+		    "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
+		    "WHERE echo_requests.referral_status <> ?" + EndOfLine + _
+		    "ORDER BY echo_requests.referral_date ASC"
+		    ps = session.DB.Prepare(sql)
+		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		    ps.Bind(0, "completed")
+		  else
+		    sql = _
+		    "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
+		    "FROM echo_requests"  + EndOfLine +_
+		    "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
+		    "WHERE echo_requests.referral_status = ?" + EndOfLine + _
+		    "ORDER BY echo_requests.referral_date ASC"
+		    ps = session.DB.Prepare(sql)
+		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		    ps.Bind(0, filter)
+		  end if
+		  
+		  var rs as RowSet = ps.SelectSQL
+		  
+		  while not rs.AfterLastRow
+		    var d as new Dictionary
+		    d.Value("id")= rs.Column("id").IntegerValue
+		    d.Value("actionable_findings") = rs.Column("actionable_findings").StringValue
+		    d.Value("conforms_new_guidance")= rs.Column("conforms_new_guidance").StringValue
+		    d.Value("conforms_old_guidance")= rs.Column("conforms_old_guidance").StringValue
+		    d.Value("created_at")= rs.Column("created_at").StringValue
+		    d.Value("echo_findings")= rs.Column("echo_findings").StringValue
+		    d.Value("identifier")= rs.Column("identifier").StringValue
+		    d.Value("referral_date")= rs.Column("referral_date").DateTimeValue
+		    d.Value("referral_indication")= rs.Column("referral_indication").StringValue
+		    d.Value("referral_status")= rs.Column("referral_status").StringValue
+		    d.Value("mrn")= rs.Column("mrn").StringValue
+		    
+		    requests.Add(d)
+		    rs.MoveToNextRow
+		  wend
+		  
+		  return requests
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetRecordByID() As rowset
+		Sub PopulateFields(id as Integer)
 		  
-		End Function
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub PopulateIdentifiersListbox(request() as Dictionary)
+		  lstIdentifiers.RemoveAllRows
+		  
+		  for each d as Dictionary in request
+		    lstIdentifiers.AddRow(d.Value("identifier").StringValue)
+		    lstIdentifiers.CellTextAt(lstIdentifiers.LastAddedRowIndex, 1) = d.Value("referral_status").StringValue
+		    lstIdentifiers.RowTagAt(lstIdentifiers.LastAddedRowIndex) = d
+		  next
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -777,17 +942,37 @@ End
 	#tag EndMethod
 
 
+	#tag Enum, Name = FilterByStatus, Type = Integer, Flags = &h0
+		All
+		  not_started
+		  in_progress
+		  completed
+		incomplete
+	#tag EndEnum
+
+
 #tag EndWindowCode
 
-#tag Events btnPREP
+#tag Events lstIdentifiers
 	#tag Event
-		Sub Pressed()
-		  CopyStringToClipboardHelper.SetCopyText(btnCopy, "Text to kopiera")
+		Sub SelectionChanged(rows() As Integer)
+		  var d as Dictionary = me.RowTagAt(me.SelectedRowIndex)
 		  
+		  txtDate.Text = d.Value("referral_date").DateTimeValue.SQLDate
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  // set up copy MRN button
+		  CopyStringToClipboardHelper.SetCopyText(btnCopy, d.Value("mrn"))
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events btnPREP1
+#tag Events btnLogout
 	#tag Event
 		Sub Pressed()
 		  session.CurrentUserID = 0
@@ -795,6 +980,37 @@ End
 		  session.IsAuthenticated = False
 		  var w as new wp_Landing
 		  w.Show
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events SegmentedButton1
+	#tag Event
+		Sub Pressed(segmentIndex As Integer)
+		  var s as string = me.SegmentAt(segmentIndex).Caption
+		  var filter As FilterByStatus
+		  select case s
+		  case "incmplete"
+		    filter = FilterByStatus.incomplete
+		  case "all"
+		    filter = FilterByStatus.All
+		  case "not started"
+		    filter = FilterByStatus.not_started
+		  case "in progress"
+		    filter = FilterByStatus.in_progress
+		  case "completed"
+		    filter = FilterByStatus.completed
+		  end Select
+		  
+		  var d() as Dictionary = GetRecords(filter)
+		  PopulateIdentifiersListbox(d)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events Button1
+	#tag Event
+		Sub Pressed()
+		  var identifiers() as Dictionary = GetRecords(FilterByStatus.All)
+		  PopulateIdentifiersListbox(identifiers)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
