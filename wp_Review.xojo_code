@@ -719,7 +719,7 @@ Begin WebPage wp_Review
       Width           =   120
       _mPanelIndex    =   -1
    End
-   Begin WebSegmentedButton SegmentedButton1
+   Begin WebSegmentedButton segFilter
       ControlID       =   ""
       CSSClasses      =   ""
       Enabled         =   True
@@ -983,7 +983,7 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events SegmentedButton1
+#tag Events segFilter
 	#tag Event
 		Sub Pressed(segmentIndex As Integer)
 		  var s as string = me.SegmentAt(segmentIndex).Caption
