@@ -821,7 +821,8 @@ End
 	#tag Event
 		Sub Shown()
 		  CopyStringToClipboardHelper.SetupCopyButton(btnCopy)
-		  
+		  CopyStringToClipboardHelper.SetupListBoxDblClickCopy(lstIdentifiers, btnCopy)
+
 		End Sub
 	#tag EndEvent
 
