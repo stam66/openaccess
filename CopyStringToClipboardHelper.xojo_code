@@ -36,8 +36,9 @@ Protected Module CopyStringToClipboardHelper
 		  
 		  Dim js As String
 		  js = "var btn = document.getElementById('" + btn.ControlID + "');" + _
-		  "if (btn) btn.setAttribute('data-copy-text', '" + escaped + "');"
-		  
+		  "if (btn) btn.setAttribute('data-copy-text', '" + escaped + "');" + _
+		  "window._xojoCopyMRN = '" + escaped + "';"
+
 		  btn.Page.ExecuteJavaScript(js)
 		End Sub
 	#tag EndMethod
@@ -99,29 +100,42 @@ Protected Module CopyStringToClipboardHelper
 
 	#tag Method, Flags = &h0
 		Sub SetupListBoxDblClickCopy(lb As WebListBox, copyBtn As WebButton)
+		  // Use document-level capture-phase listener so it fires even if
+		  // Xojo's framework stops dblclick propagation on the listbox.
+		  // Read MRN from global window._xojoCopyMRN (set by SetCopyText
+		  // during SelectionChanged), falling back to the button's data attribute.
+		  Dim lbId As String = lb.ControlID
+		  Dim btnId As String = copyBtn.ControlID
+
 		  Dim js As String
 		  js = "setTimeout(function() {" + _
-		  "  var lb = document.getElementById('" + lb.ControlID + "');" + _
-		  "  if (lb) {" + _
-		  "    lb.addEventListener('dblclick', function(e) {" + _
-		  "      var btn = document.getElementById('" + copyBtn.ControlID + "');" + _
-		  "      if (btn) {" + _
-		  "        var text = btn.getAttribute('data-copy-text');" + _
-		  "        if (text) {" + _
-		  "          var temp = document.createElement('textarea');" + _
-		  "          temp.value = text;" + _
-		  "          temp.style.position = 'fixed';" + _
-		  "          temp.style.left = '-9999px';" + _
-		  "          document.body.appendChild(temp);" + _
-		  "          temp.focus();" + _
-		  "          temp.select();" + _
-		  "          document.execCommand('copy');" + _
-		  "          document.body.removeChild(temp);" + _
-		  "        }" + _
-		  "      }" + _
-		  "    });" + _
+		  "  function doCopy(text) {" + _
+		  "    if (navigator.clipboard && navigator.clipboard.writeText) {" + _
+		  "      navigator.clipboard.writeText(text).catch(function() {" + _
+		  "        var t = document.createElement('textarea');" + _
+		  "        t.value = text; t.style.position = 'fixed'; t.style.left = '-9999px';" + _
+		  "        document.body.appendChild(t); t.focus(); t.select();" + _
+		  "        document.execCommand('copy'); document.body.removeChild(t);" + _
+		  "      });" + _
+		  "    } else {" + _
+		  "      var t = document.createElement('textarea');" + _
+		  "      t.value = text; t.style.position = 'fixed'; t.style.left = '-9999px';" + _
+		  "      document.body.appendChild(t); t.focus(); t.select();" + _
+		  "      document.execCommand('copy'); document.body.removeChild(t);" + _
+		  "    }" + _
 		  "  }" + _
-		  "}, 200);"
+		  "  document.addEventListener('dblclick', function(e) {" + _
+		  "    var lb = document.getElementById('" + lbId + "');" + _
+		  "    if (lb && (lb === e.target || lb.contains(e.target))) {" + _
+		  "      var text = window._xojoCopyMRN || '';" + _
+		  "      if (!text) {" + _
+		  "        var btn = document.getElementById('" + btnId + "');" + _
+		  "        if (btn) text = btn.getAttribute('data-copy-text') || '';" + _
+		  "      }" + _
+		  "      if (text) doCopy(text);" + _
+		  "    }" + _
+		  "  }, true);" + _
+		  "}, 300);"
 
 		  lb.Page.ExecuteJavaScript(js)
 		End Sub
