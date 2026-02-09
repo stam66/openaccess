@@ -864,16 +864,20 @@ End
 	#tag Method, Flags = &h0
 		Sub DataModified()
 		  // no matter what, set status to "in progress"
-		  // update database on exiting field or changing checkbox values, perhaps as webtimer.callLater, this will update status as well
+		  // update database on exiting field or changing checkbox values
 		  // need to update listbox's rowtag as well
-		  
+
+		  if mIsPopulating then return
+
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
-		  lblStatus.Text = "In Progress"
+		  mCurrentStatus = "In progress"
+		  lblStatus.Text = "Status: In progress"
 		  btnComplete.Enabled = true
 		  UpdateRecord(id)
 		  var newRowData as Dictionary = GetRecordByID(id)
 		  lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex) = newRowData
+		  lstIdentifiers.CellTextAt(lstIdentifiers.SelectedRowIndex, 1) = "In progress"
 		End Sub
 	#tag EndMethod
 
@@ -885,8 +889,11 @@ End
 
 	#tag Method, Flags = &h0
 		Function GetRecordByID(id as integer) As Dictionary
-		  var d as Dictionary
-		  var sql as string  = "SELECT * FROM  echo_requests WHERE id = ?"
+		  var d as new Dictionary
+		  var sql as string = "SELECT echo_requests.*, identifiers.mrn " + _
+		  "FROM echo_requests " + _
+		  "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier " + _
+		  "WHERE echo_requests.id = ?"
 		  
 		  var ps as MySQLPreparedStatement = session.DB.Prepare(sql)
 		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
@@ -932,7 +939,7 @@ End
 		    "ORDER BY echo_requests.referral_date ASC"
 		    ps = session.DB.Prepare(sql)
 		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		    ps.Bind(0, "completed")
+		    ps.Bind(0, "Completed")
 		  else
 		    var statusStr as string
 		    select case filter
@@ -941,7 +948,7 @@ End
 		    case FilterByStatus.in_progress
 		      statusStr = "In progress"
 		    case FilterByStatus.completed
-		      statusStr = "Complete"
+		      statusStr = "Completed"
 		    end select
 		    
 		    sql = _
@@ -984,36 +991,46 @@ End
 
 	#tag Method, Flags = &h0
 		Sub PopulateFields()
+		  mIsPopulating = true
+
 		  var d as dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
-		  
+
 		  txtDate.Text = d.Value("referral_date").DateTimeValue.SQLDate
 		  txtFindings.Text = d.Value("echo_findings").StringValue
 		  txtIndication.Text = d.Value("referral_indication").StringValue
 		  txtComments.Text = d.Value("comments").StringValue
-		  lblStatus.Text = "Status " + d.Value("referral_status").StringValue
-		  btnComplete.Enabled = (d.Value("referral_status").StringValue = "in progress")
-		  
+		  mCurrentStatus = d.Value("referral_status").StringValue
+		  lblStatus.Text = "Status: " + mCurrentStatus
+		  btnComplete.Enabled = (mCurrentStatus = "In progress")
+
 		  chkActionableFindings.Value = (d.Value("actionable_findings").IntegerValue = 1)
 		  chkNewGuidelines.Value = (d.Value("conforms_new_guidance").IntegerValue = 1)
 		  chkOldGuideline.Value = (d.Value("conforms_old_guidance").IntegerValue = 1)
 		  chkAppropriateTriage.Value = (d.Value("appropriate_triage").IntegerValue = 1)
+
+		  mIsPopulating = false
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub PopulateFields(id as Integer)
+		  mIsPopulating = true
+
 		  var d as dictionary = GetRecordByID(id)
 		  txtDate.Text = d.Value("referral_date").DateTimeValue.SQLDate
 		  txtFindings.Text = d.Value("echo_findings").StringValue
 		  txtIndication.Text = d.Value("referral_indication").StringValue
 		  txtComments.Text = d.Value("comments").StringValue
-		  lblStatus.Text = "Status " + d.Value("referral_status").StringValue
-		  btnComplete.Enabled = (d.Value("referral_status").StringValue = "in progress")
-		  
+		  mCurrentStatus = d.Value("referral_status").StringValue
+		  lblStatus.Text = "Status: " + mCurrentStatus
+		  btnComplete.Enabled = (mCurrentStatus = "In progress")
+
 		  chkActionableFindings.Value = (d.Value("actionable_findings").IntegerValue = 1)
 		  chkNewGuidelines.Value = (d.Value("conforms_new_guidance").IntegerValue = 1)
 		  chkOldGuideline.Value = (d.Value("conforms_old_guidance").IntegerValue = 1)
 		  chkAppropriateTriage.Value = (d.Value("appropriate_triage").IntegerValue = 1)
+
+		  mIsPopulating = false
 		End Sub
 	#tag EndMethod
 
@@ -1041,8 +1058,8 @@ End
 		  "echo_findings = ?, " + EndOfLine + _
 		  "referral_indication = ?, " + EndOfLine + _
 		  "referral_status = ?, " + EndOfLine + _
-		  "appropraite_triage = ?, " + EndOfLine + _
-		  "comments = ?" + EndOfLine + _
+		  "appropriate_triage = ?, " + EndOfLine + _
+		  "comments = ? " + _
 		  "WHERE id = ?"
 		  
 		  var ps as MySQLPreparedStatement = session.DB.Prepare(sql)
@@ -1057,11 +1074,11 @@ End
 		  ps.BindType(8, MySQLPreparedStatement.MYSQL_TYPE_LONG)
 		  
 		  if chkActionableFindings.Value then ps.Bind(0, 1) else ps.Bind(0, 0)
-		  if chkNewGuidelines.Value then ps.Bind(1, 1) else ps.Bind(0, 0)
-		  if chkOldGuideline.Value then ps.Bind(2, 1) else ps.Bind(0, 0)
+		  if chkNewGuidelines.Value then ps.Bind(1, 1) else ps.Bind(1, 0)
+		  if chkOldGuideline.Value then ps.Bind(2, 1) else ps.Bind(2, 0)
 		  ps.Bind(3, txtFindings.Text)
 		  ps.Bind(4, txtIndication.Text)
-		  ps.Bind(5, lblStatus.Text)
+		  ps.Bind(5, mCurrentStatus)
 		  if chkAppropriateTriage.Value then ps.Bind(6, 1) else ps.Bind(6, 0)
 		  ps.Bind(7, txtComments.Text)
 		  ps.Bind(8, id)
@@ -1075,6 +1092,14 @@ End
 		End Sub
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h21
+		Private mIsPopulating As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mCurrentStatus As String = "Not started"
+	#tag EndProperty
 
 	#tag Enum, Name = FilterByStatus, Type = Integer, Flags = &h0
 		all
@@ -1202,12 +1227,16 @@ End
 #tag Events btnComplete
 	#tag Event
 		Sub Pressed()
-		  lblStatus.Text = "Complete"
+		  mCurrentStatus = "Completed"
+		  lblStatus.Text = "Status: Completed"
 		  btnComplete.Enabled = False
-		  
+
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
 		  UpdateRecord(id)
+		  var newRowData as Dictionary = GetRecordByID(id)
+		  lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex) = newRowData
+		  lstIdentifiers.CellTextAt(lstIdentifiers.SelectedRowIndex, 1) = "Completed"
 		End Sub
 	#tag EndEvent
 #tag EndEvents
