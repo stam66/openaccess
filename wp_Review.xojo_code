@@ -868,7 +868,8 @@ End
 		  // need to update listbox's rowtag as well
 		  
 		  if mIsPopulating then return
-		  
+		  if lstIdentifiers.SelectedRowIndex < 0 then return
+
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
 		  mCurrentStatus = "In progress"
@@ -899,7 +900,8 @@ End
 		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
 		  ps.Bind(0, id.ToString)
 		  var rs as RowSet = ps.SelectSQL
-		  
+		  if rs.AfterLastRow then return d
+
 		  d.Value("id")= rs.Column("id").IntegerValue
 		  d.Value("actionable_findings") = rs.Column("actionable_findings").IntegerValue
 		  d.Value("conforms_new_guidance")= rs.Column("conforms_new_guidance").IntegerValue
@@ -991,6 +993,7 @@ End
 
 	#tag Method, Flags = &h0
 		Sub HiliteFirstRow()
+		  if lstIdentifiers.RowCount = 0 then return
 		  lstIdentifiers.SelectedRowIndex = 0
 		  Var d As Dictionary = lstIdentifiers.RowTagAt(0)
 		  // 
@@ -1252,10 +1255,12 @@ End
 #tag Events btnComplete
 	#tag Event
 		Sub Pressed()
+		  if lstIdentifiers.SelectedRowIndex < 0 then return
+
 		  mCurrentStatus = "Completed"
 		  lblStatus.Text = "Status: Completed"
 		  btnComplete.Enabled = False
-		  
+
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
 		  UpdateRecord(id)
