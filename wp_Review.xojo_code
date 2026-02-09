@@ -32,6 +32,7 @@ Begin WebPage wp_Review
    _ImplicitInstance=   False
    _mDesignHeight  =   0
    _mDesignWidth   =   0
+   _mName          =   ""
    _mPanelIndex    =   -1
    Begin WebListBox lstIdentifiers
       AllowRowReordering=   False
@@ -698,8 +699,8 @@ Begin WebPage wp_Review
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Outlined        =   False
@@ -737,7 +738,7 @@ Begin WebPage wp_Review
       Scope           =   0
       TabIndex        =   29
       TabStop         =   True
-      Text            =   "xxx Cases"
+      Text            =   "123 cases found"
       TextAlignment   =   0
       TextColor       =   &c000000FF
       Tooltip         =   ""
@@ -762,8 +763,8 @@ Begin WebPage wp_Review
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Multiline       =   False
@@ -856,7 +857,7 @@ End
 		Sub Shown()
 		  CopyStringToClipboardHelper.SetupCopyButton(btnCopy)
 		  CopyStringToClipboardHelper.SetupListBoxDblClickCopy(lstIdentifiers, btnCopy)
-
+		  
 		  Try
 		    var d() as Dictionary = GetRecords(FilterByStatus.incomplete)
 		    PopulateIdentifiersListbox(d)
@@ -876,7 +877,7 @@ End
 		  
 		  if mIsPopulating then return
 		  if lstIdentifiers.SelectedRowIndex < 0 then return
-
+		  
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
 		  mCurrentStatus = "In progress"
@@ -908,7 +909,7 @@ End
 		  ps.Bind(0, id.ToString)
 		  var rs as RowSet = ps.SelectSQL
 		  if rs.AfterLastRow then return d
-
+		  
 		  d.Value("id")= rs.Column("id").IntegerValue
 		  d.Value("actionable_findings") = rs.Column("actionable_findings").IntegerValue
 		  d.Value("conforms_new_guidance")= rs.Column("conforms_new_guidance").IntegerValue
@@ -932,7 +933,7 @@ End
 		  var sql as string
 		  var requests() as dictionary
 		  var ps as MySQLPreparedStatement
-
+		  
 		  Try
 		    if filter = FilterByStatus.All then
 		      sql = _
@@ -961,7 +962,7 @@ End
 		      case FilterByStatus.completed
 		        statusStr = "Completed"
 		      end select
-
+		      
 		      sql = _
 		      "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
 		      "FROM echo_requests"  + EndOfLine +_
@@ -972,9 +973,9 @@ End
 		      ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
 		      ps.Bind(0, statusStr)
 		    end if
-
+		    
 		    var rs as RowSet = ps.SelectSQL
-
+		    
 		    while not rs.AfterLastRow
 		      var d as new Dictionary
 		      d.Value("id")= rs.Column("id").IntegerValue
@@ -990,19 +991,19 @@ End
 		      d.Value("mrn")= rs.Column("mrn").StringValue
 		      d.Value("appropriate_triage") = rs.Column("appropriate_triage").IntegerValue
 		      d.Value("comments") = rs.Column("comments").StringValue
-
+		      
 		      requests.Add(d)
 		      rs.MoveToNextRow
 		    wend
-
+		    
 		  Catch err as DatabaseException
 		    ExecuteJavaScript("console.error('GetRecords: " + err.Message.ReplaceAll("'", "\'") + "')")
 		  Catch err as RuntimeException
 		    ExecuteJavaScript("console.error('GetRecords: " + err.Message.ReplaceAll("'", "\'") + "')")
 		  End Try
-
+		  
 		  return requests
-
+		  
 		End Function
 	#tag EndMethod
 
@@ -1271,11 +1272,11 @@ End
 	#tag Event
 		Sub Pressed()
 		  if lstIdentifiers.SelectedRowIndex < 0 then return
-
+		  
 		  mCurrentStatus = "Completed"
 		  lblStatus.Text = "Status: Completed"
 		  btnComplete.Enabled = False
-
+		  
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
 		  UpdateRecord(id)
@@ -1284,8 +1285,6 @@ End
 		  lstIdentifiers.CellTextAt(lstIdentifiers.SelectedRowIndex, 1) = "Completed"
 		End Sub
 	#tag EndEvent
-#tag EndEvents
-#tag Events lblFoundCount
 #tag EndEvents
 #tag Events txtComments
 	#tag Event
