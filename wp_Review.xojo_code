@@ -856,7 +856,7 @@ End
 		Sub Shown()
 		  CopyStringToClipboardHelper.SetupCopyButton(btnCopy)
 		  CopyStringToClipboardHelper.SetupListBoxDblClickCopy(lstIdentifiers, btnCopy)
-		  
+		  HiliteFirstRow
 		End Sub
 	#tag EndEvent
 
@@ -866,9 +866,9 @@ End
 		  // no matter what, set status to "in progress"
 		  // update database on exiting field or changing checkbox values
 		  // need to update listbox's rowtag as well
-
+		  
 		  if mIsPopulating then return
-
+		  
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
 		  mCurrentStatus = "In progress"
@@ -990,11 +990,34 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub HiliteFirstRow()
+		  lstIdentifiers.SelectedRowIndex = 0
+		  Var d As Dictionary = lstIdentifiers.RowTagAt(0)
+		  // 
+		  PopulateFields
+		  // Set up copy MRN button
+		  CopyStringToClipboardHelper.SetCopyText(btnCopy, d.Value("mrn"))
+		  // Pre-set the listbox data-copy-text attribute for double-click
+		  Dim textToCopy As String = d.Value("mrn")
+		  Dim escaped As String = textToCopy
+		  escaped = escaped.ReplaceAll("&", "&amp;")
+		  escaped = escaped.ReplaceAll("""", "&quot;")
+		  escaped = escaped.ReplaceAll("'", "&#39;")
+		  escaped = escaped.ReplaceAll(Chr(10), "\n")
+		  escaped = escaped.ReplaceAll(Chr(13), "")
+		  
+		  Dim js As String
+		  js = "document.getElementById('" + lstIdentifiers.ControlID + "').setAttribute('data-copy-text', '" + escaped + "');"
+		  Self.ExecuteJavaScript(js)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub PopulateFields()
 		  mIsPopulating = true
-
+		  
 		  var d as dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
-
+		  
 		  txtDate.Text = d.Value("referral_date").DateTimeValue.SQLDate
 		  txtFindings.Text = d.Value("echo_findings").StringValue
 		  txtIndication.Text = d.Value("referral_indication").StringValue
@@ -1002,12 +1025,12 @@ End
 		  mCurrentStatus = d.Value("referral_status").StringValue
 		  lblStatus.Text = "Status: " + mCurrentStatus
 		  btnComplete.Enabled = (mCurrentStatus = "In progress")
-
+		  
 		  chkActionableFindings.Value = (d.Value("actionable_findings").IntegerValue = 1)
 		  chkNewGuidelines.Value = (d.Value("conforms_new_guidance").IntegerValue = 1)
 		  chkOldGuideline.Value = (d.Value("conforms_old_guidance").IntegerValue = 1)
 		  chkAppropriateTriage.Value = (d.Value("appropriate_triage").IntegerValue = 1)
-
+		  
 		  mIsPopulating = false
 		End Sub
 	#tag EndMethod
@@ -1015,7 +1038,7 @@ End
 	#tag Method, Flags = &h0
 		Sub PopulateFields(id as Integer)
 		  mIsPopulating = true
-
+		  
 		  var d as dictionary = GetRecordByID(id)
 		  txtDate.Text = d.Value("referral_date").DateTimeValue.SQLDate
 		  txtFindings.Text = d.Value("echo_findings").StringValue
@@ -1024,12 +1047,12 @@ End
 		  mCurrentStatus = d.Value("referral_status").StringValue
 		  lblStatus.Text = "Status: " + mCurrentStatus
 		  btnComplete.Enabled = (mCurrentStatus = "In progress")
-
+		  
 		  chkActionableFindings.Value = (d.Value("actionable_findings").IntegerValue = 1)
 		  chkNewGuidelines.Value = (d.Value("conforms_new_guidance").IntegerValue = 1)
 		  chkOldGuideline.Value = (d.Value("conforms_old_guidance").IntegerValue = 1)
 		  chkAppropriateTriage.Value = (d.Value("appropriate_triage").IntegerValue = 1)
-
+		  
 		  mIsPopulating = false
 		End Sub
 	#tag EndMethod
@@ -1094,12 +1117,13 @@ End
 
 
 	#tag Property, Flags = &h21
-		Private mIsPopulating As Boolean = False
+		Private mCurrentStatus As String = "Not started"
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mCurrentStatus As String = "Not started"
+		Private mIsPopulating As Boolean = False
 	#tag EndProperty
+
 
 	#tag Enum, Name = FilterByStatus, Type = Integer, Flags = &h0
 		all
@@ -1221,6 +1245,7 @@ End
 		  
 		  var d() as Dictionary = GetRecords(filter)
 		  PopulateIdentifiersListbox(d)
+		  HiliteFirstRow
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -1230,7 +1255,7 @@ End
 		  mCurrentStatus = "Completed"
 		  lblStatus.Text = "Status: Completed"
 		  btnComplete.Enabled = False
-
+		  
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
 		  UpdateRecord(id)
