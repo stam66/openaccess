@@ -854,7 +854,6 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Shown()
-		  ExecuteJavaScript("console.log('wp_Review.Shown FIRED')")
 		  CopyStringToClipboardHelper.SetupCopyButton(btnCopy)
 		  CopyStringToClipboardHelper.SetupListBoxDblClickCopy(lstIdentifiers, btnCopy)
 
@@ -863,7 +862,7 @@ End
 		    PopulateIdentifiersListbox(d)
 		    HiliteFirstRow
 		  Catch err as RuntimeException
-		    ExecuteJavaScript("console.error('wp_Review.Shown error: " + err.Message.ReplaceAll("'", "\'") + "')")
+		    ExecuteJavaScript("console.error('wp_Review.Shown: " + err.Message.ReplaceAll("'", "\'") + "')")
 		  End Try
 		End Sub
 	#tag EndEvent
@@ -972,9 +971,7 @@ End
 		      ps.Bind(0, statusStr)
 		    end if
 
-		    ExecuteJavaScript("console.log('GetRecords: executing query for filter " + Str(Integer(filter)) + "')")
 		    var rs as RowSet = ps.SelectSQL
-		    ExecuteJavaScript("console.log('GetRecords: query returned, reading rows...')")
 
 		    while not rs.AfterLastRow
 		      var d as new Dictionary
@@ -996,12 +993,10 @@ End
 		      rs.MoveToNextRow
 		    wend
 
-		    ExecuteJavaScript("console.log('GetRecords: loaded " + requests.Count.ToString + " records')")
-
 		  Catch err as DatabaseException
-		    ExecuteJavaScript("console.error('GetRecords DatabaseException: " + err.Message.ReplaceAll("'", "\'") + "')")
+		    ExecuteJavaScript("console.error('GetRecords: " + err.Message.ReplaceAll("'", "\'") + "')")
 		  Catch err as RuntimeException
-		    ExecuteJavaScript("console.error('GetRecords RuntimeException: " + err.Message.ReplaceAll("'", "\'") + "')")
+		    ExecuteJavaScript("console.error('GetRecords: " + err.Message.ReplaceAll("'", "\'") + "')")
 		  End Try
 
 		  return requests
@@ -1287,11 +1282,6 @@ End
 	#tag EndEvent
 #tag EndEvents
 #tag Events lblFoundCount
-	#tag Event
-		Sub Shown()
-		  ExecuteJavaScript("console.log('lblFoundCount.Shown FIRED')")
-		End Sub
-	#tag EndEvent
 #tag EndEvents
 #tag Events txtComments
 	#tag Event
