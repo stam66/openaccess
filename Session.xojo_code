@@ -13,6 +13,9 @@ Inherits WebSession
 	#tag Event
 		Sub Opening()
 		  IsConnected = connect()
+		  
+		  ExecuteJavascript("console.log('" + "Is Connected: " + session.IsConnected.ToString + "')")
+		  
 		End Sub
 	#tag EndEvent
 
@@ -34,7 +37,11 @@ Inherits WebSession
 		  
 		  Try
 		    DB.Connect
-		    System.DebugLog("Database connected.")
+		    if DebugBuild then
+		      System.DebugLog("Database connected.")
+		    else
+		      ExecuteJavascript("console.log('" + "Database connected." +"')")
+		    end if
 		    Return True
 		  Catch err As DatabaseException
 		    System.DebugLog("Database connection error: " + err.Message)
