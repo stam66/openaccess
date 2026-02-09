@@ -972,7 +972,7 @@ End
 		      ps.Bind(0, statusStr)
 		    end if
 
-		    ExecuteJavaScript("console.log('GetRecords: executing query for filter " + filter.ToString + "')")
+		    ExecuteJavaScript("console.log('GetRecords: executing query for filter " + Str(Integer(filter)) + "')")
 		    var rs as RowSet = ps.SelectSQL
 		    ExecuteJavaScript("console.log('GetRecords: query returned, reading rows...')")
 
