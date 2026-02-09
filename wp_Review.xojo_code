@@ -75,7 +75,7 @@ Begin WebPage wp_Review
       Tooltip         =   ""
       Top             =   146
       Visible         =   True
-      Width           =   208
+      Width           =   215
       _mPanelIndex    =   -1
    End
    Begin WebButton btnCopy
@@ -303,7 +303,7 @@ Begin WebPage wp_Review
       LockVertical    =   False
       MaximumCharactersAllowed=   0
       PanelIndex      =   0
-      ReadOnly        =   False
+      ReadOnly        =   True
       Scope           =   0
       TabIndex        =   11
       TabStop         =   True
@@ -686,15 +686,15 @@ Begin WebPage wp_Review
    Begin WebButton btnComplete
       AllowAutoDisable=   False
       Cancel          =   False
-      Caption         =   "Mark complete"
+      Caption         =   "Mark as complete"
       ControlID       =   ""
       CSSClasses      =   ""
       Default         =   False
-      Enabled         =   True
+      Enabled         =   False
       Height          =   38
       Index           =   -2147483648
       Indicator       =   0
-      Left            =   836
+      Left            =   822
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -710,7 +710,7 @@ Begin WebPage wp_Review
       Tooltip         =   ""
       Top             =   20
       Visible         =   True
-      Width           =   142
+      Width           =   156
       _mPanelIndex    =   -1
    End
    Begin WebLabel lblFoundCount
@@ -758,7 +758,7 @@ Begin WebPage wp_Review
       Index           =   -2147483648
       Indicator       =   ""
       Italic          =   False
-      Left            =   843
+      Left            =   822
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -772,13 +772,13 @@ Begin WebPage wp_Review
       TabIndex        =   30
       TabStop         =   True
       Text            =   "Status: Not started"
-      TextAlignment   =   0
+      TextAlignment   =   2
       TextColor       =   &c000000FF
       Tooltip         =   ""
-      Top             =   52
+      Top             =   53
       Underline       =   False
       Visible         =   True
-      Width           =   147
+      Width           =   156
       _mPanelIndex    =   -1
    End
    Begin WebTextArea txtComments
@@ -860,6 +860,21 @@ End
 		End Sub
 	#tag EndEvent
 
+
+	#tag Method, Flags = &h0
+		Sub DataModified()
+		  // no matter what, set status to "in progress"
+		  // update database on exiting field or changing checkbox values, perhaps as webtimer.callLater, this will update status as well
+		  // need to update listbox's rowtag as well
+		  
+		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
+		  var id as integer = rowData.Value("id").IntegerValue
+		  lblStatus.Text = "In Progress"
+		  UpdateRecord(id)
+		  var newRowData as Dictionary = GetRecordByID(id)
+		  lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex) = newRowData
+		End Sub
+	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub ExportAllRecords()
@@ -975,6 +990,7 @@ End
 		  txtIndication.Text = d.Value("referral_indication").StringValue
 		  txtComments.Text = d.Value("comments").StringValue
 		  lblStatus.Text = "Status " + d.Value("referral_status").StringValue
+		  btnComplete.Enabled = (d.Value("referral_status").StringValue = "in progress")
 		  
 		  chkActionableFindings.Value = (d.Value("actionable_findings").IntegerValue = 1)
 		  chkNewGuidelines.Value = (d.Value("conforms_new_guidance").IntegerValue = 1)
@@ -991,6 +1007,7 @@ End
 		  txtIndication.Text = d.Value("referral_indication").StringValue
 		  txtComments.Text = d.Value("comments").StringValue
 		  lblStatus.Text = "Status " + d.Value("referral_status").StringValue
+		  btnComplete.Enabled = (d.Value("referral_status").StringValue = "in progress")
 		  
 		  chkActionableFindings.Value = (d.Value("actionable_findings").IntegerValue = 1)
 		  chkNewGuidelines.Value = (d.Value("conforms_new_guidance").IntegerValue = 1)
@@ -1014,7 +1031,45 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub UpdateRecord()
+		Sub UpdateRecord(id as Integer)
+		  
+		  var sql as string = "UPDATE echo_requests SET " + EndOfLine + _
+		  "actionable_findings = ?, "+ EndOfLine + _
+		  "conforms_new_guidance = ?, " + EndOfLine + _
+		  "conforms_old_guidance = ?, " + EndOfLine + _
+		  "echo_findings = ?, " + EndOfLine + _
+		  "referral_indication = ?, " + EndOfLine + _
+		  "referral_status = ?, " + EndOfLine + _
+		  "appropraite_triage = ?, " + EndOfLine + _
+		  "comments = ?" + EndOfLine + _
+		  "WHERE id = ?"
+		  
+		  var ps as MySQLPreparedStatement = session.DB.Prepare(sql)
+		  ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_TINY)
+		  ps.BindType(1, MySQLPreparedStatement.MYSQL_TYPE_TINY)
+		  ps.BindType(2, MySQLPreparedStatement.MYSQL_TYPE_TINY)
+		  ps.BindType(3, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(4, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(5, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(6, MySQLPreparedStatement.MYSQL_TYPE_TINY)
+		  ps.BindType(7, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		  ps.BindType(8, MySQLPreparedStatement.MYSQL_TYPE_LONG)
+		  
+		  if chkActionableFindings.Value then ps.Bind(0, 1) else ps.Bind(0, 0)
+		  if chkNewGuidelines.Value then ps.Bind(1, 1) else ps.Bind(0, 0)
+		  if chkOldGuideline.Value then ps.Bind(2, 1) else ps.Bind(0, 0)
+		  ps.Bind(3, txtFindings.Text)
+		  ps.Bind(4, txtIndication.Text)
+		  ps.Bind(5, lblStatus.Text)
+		  if chkAppropriateTriage.Value then ps.Bind(6, 1) else ps.Bind(6, 0)
+		  ps.Bind(7, txtComments.Text)
+		  ps.Bind(8, id)
+		  
+		  ps.ExecuteSQL
+		  
+		  
+		  
+		  
 		  
 		End Sub
 	#tag EndMethod
@@ -1067,6 +1122,48 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
+#tag Events txtIndication
+	#tag Event
+		Sub FocusLost()
+		  SetStatusInProgress
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events txtFindings
+	#tag Event
+		Sub FocusLost()
+		  SetStatusInProgress
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events chkOldGuideline
+	#tag Event
+		Sub ValueChanged()
+		  SetStatusInProgress
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events chkNewGuidelines
+	#tag Event
+		Sub ValueChanged()
+		  SetStatusInProgress
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events chkActionableFindings
+	#tag Event
+		Sub ValueChanged()
+		  SetStatusInProgress
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events chkAppropriateTriage
+	#tag Event
+		Sub ValueChanged()
+		  SetStatusInProgress
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag Events btnLogout
 	#tag Event
 		Sub Pressed()
@@ -1114,6 +1211,13 @@ End
 		Sub Shown()
 		  var d() as Dictionary = GetRecords(FilterByStatus.incomplete)
 		  PopulateIdentifiersListbox(d)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events txtComments
+	#tag Event
+		Sub FocusLost()
+		  SetStatusInProgress
 		End Sub
 	#tag EndEvent
 #tag EndEvents
