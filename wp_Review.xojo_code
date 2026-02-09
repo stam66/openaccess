@@ -871,13 +871,13 @@ End
 
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
-		  mCurrentStatus = "in_progress"
+		  mCurrentStatus = "In progress"
 		  lblStatus.Text = "Status: In progress"
 		  btnComplete.Enabled = true
 		  UpdateRecord(id)
 		  var newRowData as Dictionary = GetRecordByID(id)
 		  lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex) = newRowData
-		  lstIdentifiers.CellTextAt(lstIdentifiers.SelectedRowIndex, 1) = "in_progress"
+		  lstIdentifiers.CellTextAt(lstIdentifiers.SelectedRowIndex, 1) = "In progress"
 		End Sub
 	#tag EndMethod
 
@@ -939,16 +939,16 @@ End
 		    "ORDER BY echo_requests.referral_date ASC"
 		    ps = session.DB.Prepare(sql)
 		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		    ps.Bind(0, "completed")
+		    ps.Bind(0, "Completed")
 		  else
 		    var statusStr as string
 		    select case filter
 		    case FilterByStatus.not_started
-		      statusStr = "not_started"
+		      statusStr = "Not started"
 		    case FilterByStatus.in_progress
-		      statusStr = "in_progress"
+		      statusStr = "In progress"
 		    case FilterByStatus.completed
-		      statusStr = "completed"
+		      statusStr = "Completed"
 		    end select
 		    
 		    sql = _
@@ -1001,7 +1001,7 @@ End
 		  txtComments.Text = d.Value("comments").StringValue
 		  mCurrentStatus = d.Value("referral_status").StringValue
 		  lblStatus.Text = "Status: " + mCurrentStatus
-		  btnComplete.Enabled = (mCurrentStatus = "in_progress")
+		  btnComplete.Enabled = (mCurrentStatus = "In progress")
 
 		  chkActionableFindings.Value = (d.Value("actionable_findings").IntegerValue = 1)
 		  chkNewGuidelines.Value = (d.Value("conforms_new_guidance").IntegerValue = 1)
@@ -1023,7 +1023,7 @@ End
 		  txtComments.Text = d.Value("comments").StringValue
 		  mCurrentStatus = d.Value("referral_status").StringValue
 		  lblStatus.Text = "Status: " + mCurrentStatus
-		  btnComplete.Enabled = (mCurrentStatus = "in_progress")
+		  btnComplete.Enabled = (mCurrentStatus = "In progress")
 
 		  chkActionableFindings.Value = (d.Value("actionable_findings").IntegerValue = 1)
 		  chkNewGuidelines.Value = (d.Value("conforms_new_guidance").IntegerValue = 1)
@@ -1058,7 +1058,7 @@ End
 		  "echo_findings = ?, " + EndOfLine + _
 		  "referral_indication = ?, " + EndOfLine + _
 		  "referral_status = ?, " + EndOfLine + _
-		  "appropraite_triage = ?, " + EndOfLine + _
+		  "appropriate_triage = ?, " + EndOfLine + _
 		  "comments = ? " + _
 		  "WHERE id = ?"
 		  
@@ -1098,7 +1098,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mCurrentStatus As String = "not_started"
+		Private mCurrentStatus As String = "Not started"
 	#tag EndProperty
 
 	#tag Enum, Name = FilterByStatus, Type = Integer, Flags = &h0
@@ -1227,8 +1227,8 @@ End
 #tag Events btnComplete
 	#tag Event
 		Sub Pressed()
-		  mCurrentStatus = "completed"
-		  lblStatus.Text = "Status: completed"
+		  mCurrentStatus = "Completed"
+		  lblStatus.Text = "Status: Completed"
 		  btnComplete.Enabled = False
 
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
@@ -1236,7 +1236,7 @@ End
 		  UpdateRecord(id)
 		  var newRowData as Dictionary = GetRecordByID(id)
 		  lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex) = newRowData
-		  lstIdentifiers.CellTextAt(lstIdentifiers.SelectedRowIndex, 1) = "completed"
+		  lstIdentifiers.CellTextAt(lstIdentifiers.SelectedRowIndex, 1) = "Completed"
 		End Sub
 	#tag EndEvent
 #tag EndEvents
