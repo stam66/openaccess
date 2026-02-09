@@ -854,9 +854,17 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Shown()
+		  ExecuteJavaScript("console.log('wp_Review.Shown FIRED')")
 		  CopyStringToClipboardHelper.SetupCopyButton(btnCopy)
 		  CopyStringToClipboardHelper.SetupListBoxDblClickCopy(lstIdentifiers, btnCopy)
-		  HiliteFirstRow
+
+		  Try
+		    var d() as Dictionary = GetRecords(FilterByStatus.incomplete)
+		    PopulateIdentifiersListbox(d)
+		    HiliteFirstRow
+		  Catch err as RuntimeException
+		    ExecuteJavaScript("console.error('wp_Review.Shown error: " + err.Message.ReplaceAll("'", "\'") + "')")
+		  End Try
 		End Sub
 	#tag EndEvent
 
@@ -925,69 +933,81 @@ End
 		  var sql as string
 		  var requests() as dictionary
 		  var ps as MySQLPreparedStatement
-		  if filter = FilterByStatus.All then
-		    sql = _
-		    "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
-		    "FROM echo_requests"  + EndOfLine +_
-		    "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
-		    "ORDER BY echo_requests.referral_date ASC"
-		    ps = session.DB.Prepare(sql)
-		  elseif filter = FilterByStatus.incomplete then
-		    sql = _
-		    "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
-		    "FROM echo_requests"  + EndOfLine +_
-		    "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
-		    "WHERE echo_requests.referral_status <> ?" + EndOfLine + _
-		    "ORDER BY echo_requests.referral_date ASC"
-		    ps = session.DB.Prepare(sql)
-		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		    ps.Bind(0, "Completed")
-		  else
-		    var statusStr as string
-		    select case filter
-		    case FilterByStatus.not_started
-		      statusStr = "Not started"
-		    case FilterByStatus.in_progress
-		      statusStr = "In progress"
-		    case FilterByStatus.completed
-		      statusStr = "Completed"
-		    end select
-		    
-		    sql = _
-		    "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
-		    "FROM echo_requests"  + EndOfLine +_
-		    "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
-		    "WHERE echo_requests.referral_status = ?" + EndOfLine + _
-		    "ORDER BY echo_requests.referral_date ASC"
-		    ps = session.DB.Prepare(sql)
-		    ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
-		    ps.Bind(0, statusStr)
-		  end if
-		  
-		  var rs as RowSet = ps.SelectSQL
-		  
-		  while not rs.AfterLastRow
-		    var d as new Dictionary
-		    d.Value("id")= rs.Column("id").IntegerValue
-		    d.Value("actionable_findings") = rs.Column("actionable_findings").IntegerValue
-		    d.Value("conforms_new_guidance")= rs.Column("conforms_new_guidance").IntegerValue
-		    d.Value("conforms_old_guidance")= rs.Column("conforms_old_guidance").IntegerValue
-		    d.Value("created_at")= rs.Column("created_at").StringValue
-		    d.Value("echo_findings")= rs.Column("echo_findings").StringValue
-		    d.Value("identifier")= rs.Column("identifier").StringValue
-		    d.Value("referral_date")= rs.Column("referral_date").DateTimeValue
-		    d.Value("referral_indication")= rs.Column("referral_indication").StringValue
-		    d.Value("referral_status")= rs.Column("referral_status").StringValue
-		    d.Value("mrn")= rs.Column("mrn").StringValue
-		    d.Value("appropriate_triage") = rs.Column("appropriate_triage").IntegerValue
-		    d.Value("comments") = rs.Column("comments").StringValue
-		    
-		    requests.Add(d)
-		    rs.MoveToNextRow
-		  wend
-		  
+
+		  Try
+		    if filter = FilterByStatus.All then
+		      sql = _
+		      "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
+		      "FROM echo_requests"  + EndOfLine +_
+		      "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
+		      "ORDER BY echo_requests.referral_date ASC"
+		      ps = session.DB.Prepare(sql)
+		    elseif filter = FilterByStatus.incomplete then
+		      sql = _
+		      "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
+		      "FROM echo_requests"  + EndOfLine +_
+		      "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
+		      "WHERE echo_requests.referral_status <> ?" + EndOfLine + _
+		      "ORDER BY echo_requests.referral_date ASC"
+		      ps = session.DB.Prepare(sql)
+		      ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		      ps.Bind(0, "Completed")
+		    else
+		      var statusStr as string
+		      select case filter
+		      case FilterByStatus.not_started
+		        statusStr = "Not started"
+		      case FilterByStatus.in_progress
+		        statusStr = "In progress"
+		      case FilterByStatus.completed
+		        statusStr = "Completed"
+		      end select
+
+		      sql = _
+		      "SELECT echo_requests.*, identifiers.mrn" + EndOfLine +_
+		      "FROM echo_requests"  + EndOfLine +_
+		      "LEFT JOIN identifiers ON echo_requests.identifier = identifiers.identifier"  + EndOfLine + _
+		      "WHERE echo_requests.referral_status = ?" + EndOfLine + _
+		      "ORDER BY echo_requests.referral_date ASC"
+		      ps = session.DB.Prepare(sql)
+		      ps.BindType(0, MySQLPreparedStatement.MYSQL_TYPE_STRING)
+		      ps.Bind(0, statusStr)
+		    end if
+
+		    ExecuteJavaScript("console.log('GetRecords: executing query for filter " + filter.ToString + "')")
+		    var rs as RowSet = ps.SelectSQL
+		    ExecuteJavaScript("console.log('GetRecords: query returned, reading rows...')")
+
+		    while not rs.AfterLastRow
+		      var d as new Dictionary
+		      d.Value("id")= rs.Column("id").IntegerValue
+		      d.Value("actionable_findings") = rs.Column("actionable_findings").IntegerValue
+		      d.Value("conforms_new_guidance")= rs.Column("conforms_new_guidance").IntegerValue
+		      d.Value("conforms_old_guidance")= rs.Column("conforms_old_guidance").IntegerValue
+		      d.Value("created_at")= rs.Column("created_at").StringValue
+		      d.Value("echo_findings")= rs.Column("echo_findings").StringValue
+		      d.Value("identifier")= rs.Column("identifier").StringValue
+		      d.Value("referral_date")= rs.Column("referral_date").DateTimeValue
+		      d.Value("referral_indication")= rs.Column("referral_indication").StringValue
+		      d.Value("referral_status")= rs.Column("referral_status").StringValue
+		      d.Value("mrn")= rs.Column("mrn").StringValue
+		      d.Value("appropriate_triage") = rs.Column("appropriate_triage").IntegerValue
+		      d.Value("comments") = rs.Column("comments").StringValue
+
+		      requests.Add(d)
+		      rs.MoveToNextRow
+		    wend
+
+		    ExecuteJavaScript("console.log('GetRecords: loaded " + requests.Count.ToString + " records')")
+
+		  Catch err as DatabaseException
+		    ExecuteJavaScript("console.error('GetRecords DatabaseException: " + err.Message.ReplaceAll("'", "\'") + "')")
+		  Catch err as RuntimeException
+		    ExecuteJavaScript("console.error('GetRecords RuntimeException: " + err.Message.ReplaceAll("'", "\'") + "')")
+		  End Try
+
 		  return requests
-		  
+
 		End Function
 	#tag EndMethod
 
@@ -1236,11 +1256,11 @@ End
 		  select case s
 		  case "Incomplete"
 		    filter = FilterByStatus.incomplete
-		  case "all"
+		  case "All"
 		    filter = FilterByStatus.All
-		  case "not started"
+		  case "Not started"
 		    filter = FilterByStatus.not_started
-		  case "in progress"
+		  case "In progress"
 		    filter = FilterByStatus.in_progress
 		  case "Complete"
 		    filter = FilterByStatus.completed
@@ -1273,8 +1293,7 @@ End
 #tag Events lblFoundCount
 	#tag Event
 		Sub Shown()
-		  var d() as Dictionary = GetRecords(FilterByStatus.incomplete)
-		  PopulateIdentifiersListbox(d)
+		  ExecuteJavaScript("console.log('lblFoundCount.Shown FIRED')")
 		End Sub
 	#tag EndEvent
 #tag EndEvents
