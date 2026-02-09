@@ -856,6 +856,11 @@ End
 		Sub Shown()
 		  CopyStringToClipboardHelper.SetupCopyButton(btnCopy)
 		  CopyStringToClipboardHelper.SetupListBoxDblClickCopy(lstIdentifiers, btnCopy)
+
+		  // Load records directly here instead of relying on lblFoundCount.Shown
+		  // which may fire after this event on Xojo Cloud, causing a race condition
+		  var d() as Dictionary = GetRecords(FilterByStatus.incomplete)
+		  PopulateIdentifiersListbox(d)
 		  HiliteFirstRow
 		End Sub
 	#tag EndEvent
@@ -991,6 +996,7 @@ End
 
 	#tag Method, Flags = &h0
 		Sub HiliteFirstRow()
+		  if lstIdentifiers.RowCount = 0 then return
 		  lstIdentifiers.SelectedRowIndex = 0
 		  Var d As Dictionary = lstIdentifiers.RowTagAt(0)
 		  // 
@@ -1233,11 +1239,11 @@ End
 		  select case s
 		  case "Incomplete"
 		    filter = FilterByStatus.incomplete
-		  case "all"
+		  case "All"
 		    filter = FilterByStatus.All
-		  case "not started"
+		  case "Not started"
 		    filter = FilterByStatus.not_started
-		  case "in progress"
+		  case "In progress"
 		    filter = FilterByStatus.in_progress
 		  case "Complete"
 		    filter = FilterByStatus.completed
@@ -1266,12 +1272,6 @@ End
 	#tag EndEvent
 #tag EndEvents
 #tag Events lblFoundCount
-	#tag Event
-		Sub Shown()
-		  var d() as Dictionary = GetRecords(FilterByStatus.incomplete)
-		  PopulateIdentifiersListbox(d)
-		End Sub
-	#tag EndEvent
 #tag EndEvents
 #tag Events txtComments
 	#tag Event
