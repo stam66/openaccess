@@ -104,7 +104,7 @@ Begin WebPage wp_Review
       TabStop         =   True
       Tooltip         =   ""
       Top             =   20
-      Visible         =   True
+      Visible         =   False
       Width           =   110
       _mPanelIndex    =   -1
    End
@@ -870,6 +870,7 @@ End
 		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
 		  var id as integer = rowData.Value("id").IntegerValue
 		  lblStatus.Text = "In Progress"
+		  btnComplete.Enabled = true
 		  UpdateRecord(id)
 		  var newRowData as Dictionary = GetRecordByID(id)
 		  lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex) = newRowData
@@ -1125,42 +1126,42 @@ End
 #tag Events txtIndication
 	#tag Event
 		Sub FocusLost()
-		  SetStatusInProgress
+		  DataModified
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events txtFindings
 	#tag Event
 		Sub FocusLost()
-		  SetStatusInProgress
+		  DataModified
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events chkOldGuideline
 	#tag Event
 		Sub ValueChanged()
-		  SetStatusInProgress
+		  DataModified
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events chkNewGuidelines
 	#tag Event
 		Sub ValueChanged()
-		  SetStatusInProgress
+		  DataModified
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events chkActionableFindings
 	#tag Event
 		Sub ValueChanged()
-		  SetStatusInProgress
+		  DataModified
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events chkAppropriateTriage
 	#tag Event
 		Sub ValueChanged()
-		  SetStatusInProgress
+		  DataModified
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -1201,8 +1202,12 @@ End
 #tag Events btnComplete
 	#tag Event
 		Sub Pressed()
-		  var identifiers() as Dictionary = GetRecords(FilterByStatus.All)
-		  PopulateIdentifiersListbox(identifiers)
+		  lblStatus.Text = "Complete"
+		  btnComplete.Enabled = False
+		  
+		  var rowData as Dictionary = lstIdentifiers.RowTagAt(lstIdentifiers.SelectedRowIndex)
+		  var id as integer = rowData.Value("id").IntegerValue
+		  UpdateRecord(id)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -1217,7 +1222,7 @@ End
 #tag Events txtComments
 	#tag Event
 		Sub FocusLost()
-		  SetStatusInProgress
+		  DataModified
 		End Sub
 	#tag EndEvent
 #tag EndEvents
