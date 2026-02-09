@@ -854,6 +854,7 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Shown()
+		  ExecuteJavaScript("console.log('wp_Review.Shown FIRED')")
 		  CopyStringToClipboardHelper.SetupCopyButton(btnCopy)
 		  CopyStringToClipboardHelper.SetupListBoxDblClickCopy(lstIdentifiers, btnCopy)
 
@@ -1286,6 +1287,11 @@ End
 	#tag EndEvent
 #tag EndEvents
 #tag Events lblFoundCount
+	#tag Event
+		Sub Shown()
+		  ExecuteJavaScript("console.log('lblFoundCount.Shown FIRED')")
+		End Sub
+	#tag EndEvent
 #tag EndEvents
 #tag Events txtComments
 	#tag Event
